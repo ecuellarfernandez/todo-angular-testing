@@ -1,7 +1,9 @@
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Project } from '../models/project.model';
 import { ProjectRepository } from '../repositories/project.repository';
 
+@Injectable()
 export class GetProjectByIdUseCase {
   constructor(private projectRepository: ProjectRepository) {}
 

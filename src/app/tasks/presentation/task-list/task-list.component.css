@@ -1,0 +1,50 @@
+/* Estilos adicionales específicos para el componente de lista de tareas */
+
+/* Estilo para tareas completadas */
+.completed {
+  text-decoration: line-through;
+  color: #6b7280;
+  opacity: 0.8;
+}
+
+/* Animación para el checkbox */
+input[type="checkbox"] {
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  transform: scale(1.1);
+}
+
+/* Efecto hover para las tarjetas de tareas */
+.task-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para tareas vencidas */
+.border-red-500 {
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2);
+}
+
+/* Animación de pulsación para tareas vencidas */
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.border-red-500:not(.completed) {
+  animation: pulse-red 2s infinite;
+}
