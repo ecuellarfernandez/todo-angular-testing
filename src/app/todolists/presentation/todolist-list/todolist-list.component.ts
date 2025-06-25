@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TodoList } from '../../domain/models/todolist.model';
 import { GetTodoListsUseCase } from '../../domain/usecases/get-todolists.usecase';
 import { DeleteTodoListUseCase } from '../../domain/usecases/delete-todolist.usecase';
@@ -14,7 +14,7 @@ import { ProjectRepositoryImpl } from '../../../projects/data/project-repository
 @Component({
   selector: 'app-todolist-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './todolist-list.component.html',
   providers: [
     TodoListRepositoryImpl,
@@ -133,5 +133,9 @@ export class TodoListListComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/projects']);
+  }
+
+  viewTasks(todoListId: string): void {
+    this.router.navigate([`/projects/${this.projectId}/todolists/${todoListId}/tasks`]);
   }
 }

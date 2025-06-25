@@ -51,7 +51,7 @@
 
     <!-- TodoList List -->
     <div *ngIf="!loading && !error && todoLists.length > 0" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <div *ngFor="let todoList of todoLists" class="bg-white overflow-hidden shadow rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-shadow">
+      <div *ngFor="let todoList of todoLists" class="bg-white overflow-hidden shadow rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-shadow" (click)="viewTasks(todoList.id)">
         <div class="px-4 py-5 sm:p-6">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-medium text-gray-900 truncate">{{ todoList.name }}</h3>

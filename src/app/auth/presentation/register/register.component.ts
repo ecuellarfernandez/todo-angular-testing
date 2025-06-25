@@ -63,7 +63,8 @@ export class RegisterComponent implements OnInit {
       this.registerUseCase.execute(username, name, email, password).subscribe({
         next: (user) => {
           console.log('Usuario registrado:', user);
-          this.router.navigate(['/login']);
+          localStorage.setItem('jwt', user.token);
+          this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           console.error('Error en el registro:', err);
