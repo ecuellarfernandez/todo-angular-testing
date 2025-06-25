@@ -1,0 +1,75 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-md border border-gray-200">
+    <div class="text-center">
+      <h2 class="text-3xl font-bold text-gray-900 tracking-tight">Crear cuenta</h2>
+      <p class="mt-2 text-sm text-gray-600">
+        O
+        <button (click)="navigateToLogin()" class="font-medium text-blue-600 hover:text-blue-500 focus:outline-none">
+          inicia sesión con tu cuenta existente
+        </button>
+      </p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
+      <div class="space-y-4">
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
+          <input id="username" formControlName="username" type="text" required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+          <div *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="text-red-500 text-sm mt-1">
+            El nombre de usuario es requerido
+          </div>
+        </div>
+
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Nombre completo</label>
+          <input id="name" formControlName="name" type="text" required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+          <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-sm mt-1">
+            El nombre es requerido
+          </div>
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+          <input id="email" formControlName="email" type="email" required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+          <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="text-red-500 text-sm mt-1">
+            <span *ngIf="form.get('email')?.errors?.['required']">El correo electrónico es requerido</span>
+            <span *ngIf="form.get('email')?.errors?.['email']">Ingrese un correo electrónico válido</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+          <input id="password" formControlName="password" type="password" required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+          <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="text-red-500 text-sm mt-1">
+            <span *ngIf="form.get('password')?.errors?.['required']">La contraseña es requerida</span>
+            <span *ngIf="form.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 3 caracteres</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
+          <input id="confirmPassword" formControlName="confirmPassword" type="password" required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+          <div *ngIf="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched" class="text-red-500 text-sm mt-1">
+            <span *ngIf="form.get('confirmPassword')?.errors?.['required']">Confirme su contraseña</span>
+            <span *ngIf="form.get('confirmPassword')?.errors?.['passwordMismatch']">Las contraseñas no coinciden</span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="text-red-500 text-sm text-center">
+        {{ errorMessage }}
+      </div>
+
+      <div>
+        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Registrarse
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
