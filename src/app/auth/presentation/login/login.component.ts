@@ -9,7 +9,6 @@ import {LoginUseCase} from '../../domain/usecases/login.usecase';
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: 'login.component.html',
-  styleUrl: 'login.component.css',
   providers:[
     AuthRepositoryImpl,
     {
