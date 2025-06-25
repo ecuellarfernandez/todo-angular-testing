@@ -55,7 +55,13 @@ export class ProjectFormComponent implements OnInit {
     });
 
     this.projectId = this.route.snapshot.paramMap.get('id');
-    this.isEditMode = this.route.snapshot.url[1]?.path === 'edit';
+    // Verificar si estamos en modo edición comprobando la URL
+    const urlPath = this.route.snapshot.url;
+    this.isEditMode = urlPath.length > 0 && urlPath[urlPath.length - 1].path === 'edit';
+    
+    console.log('URL Path:', urlPath.map(segment => segment.path));
+    console.log('Is Edit Mode:', this.isEditMode);
+    console.log('Project ID:', this.projectId);
 
     if (this.isEditMode && this.projectId) {
       this.loadProject(this.projectId);

@@ -5,6 +5,7 @@ import { ProjectRepositoryImpl } from '../../data/project-repository.impl';
 import { GetProjectsUseCase } from '../../domain/usecases/get-projects.usecase';
 import { DeleteProjectUseCase } from '../../domain/usecases/delete-project.usecase';
 import { Project } from '../../domain/models/project.model';
+import { DialogService } from '../../../core/services/dialog.service';
 
 @Component({
   selector: 'app-project-list',
@@ -33,7 +34,8 @@ export class ProjectListComponent implements OnInit {
   constructor(
     private getProjectsUseCase: GetProjectsUseCase,
     private deleteProjectUseCase: DeleteProjectUseCase,
-    private router: Router
+    private router: Router,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -65,17 +67,30 @@ export class ProjectListComponent implements OnInit {
 
   deleteProject(id: string, event: Event): void {
     event.stopPropagation();
-    if (confirm('¿Está seguro de que desea eliminar este proyecto?')) {
-      this.deleteProjectUseCase.execute(id).subscribe({
-        next: () => {
-          this.projects = this.projects.filter(project => project.id !== id);
-        },
-        error: (err) => {
-          console.error('Error al eliminar el proyecto:', err);
-          alert('No se pudo eliminar el proyecto. Por favor, inténtelo de nuevo.');
-        }
-      });
-    }
+    
+    this.dialogService.confirm({
+      title: 'Eliminar proyecto',
+      message: '¿Está seguro de que desea eliminar este proyecto?',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then(confirmed => {
+      if (confirmed) {
+        this.deleteProjectUseCase.execute(id).subscribe({
+          next: () => {
+            this.projects = this.projects.filter(project => project.id !== id);
+          },
+          error: (err) => {
+            console.error('Error al eliminar el proyecto:', err);
+            this.dialogService.confirm({
+              title: 'Error',
+              message: 'No se pudo eliminar el proyecto. Por favor, inténtelo de nuevo.',
+              confirmButtonText: 'Aceptar',
+              cancelButtonText: ''
+            });
+          }
+        });
+      }
+    });
   }
 
   logout(): void {
