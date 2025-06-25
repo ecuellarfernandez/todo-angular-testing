@@ -7,11 +7,15 @@ import {User} from '../domain/models/user.model';
 
 @Injectable()
 export class AuthRepositoryImpl implements AuthRepository {
-  private apiUrl = `${environment.apiUrl}/auth`;
+  private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/login`, { email, password });
+    return this.http.post<User>(`${this.apiUrl}/auth/login`, { email, password });
+  }
+
+  register(username: string, name: string, email: string, password: string): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/users/register`, { username, name, email, password });
   }
 }
