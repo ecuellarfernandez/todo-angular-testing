@@ -95,7 +95,7 @@ export class ProjectFormComponent implements OnInit {
       if (this.isEditMode && this.projectId) {
         this.updateProjectUseCase.execute(this.projectId, name, description).subscribe({
           next: () => {
-            this.router.navigate(['/projects']);
+            this.router.navigate(['/dashboard']);
           },
           error: (err) => {
             console.error('Error al actualizar el proyecto:', err);
@@ -106,7 +106,7 @@ export class ProjectFormComponent implements OnInit {
       } else {
         this.createProjectUseCase.execute(name, description).subscribe({
           next: () => {
-            this.router.navigate(['/projects']);
+            this.router.navigate(['/dashboard']);
           },
           error: (err) => {
             console.error('Error al crear el proyecto:', err);
@@ -121,6 +121,6 @@ export class ProjectFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/projects']);
+    this.router.navigate(['/dashboard']);
   }
 }

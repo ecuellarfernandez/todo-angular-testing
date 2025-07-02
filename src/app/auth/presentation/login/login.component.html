@@ -14,7 +14,7 @@
       <div class="space-y-4">
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-          <input id="email" formControlName="email" type="email" required
+          <input id="email" name="email" formControlName="email" type="email" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="text-red-500 text-sm mt-1">
             El correo electrónico es requerido
@@ -23,7 +23,7 @@
 
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-          <input id="password" formControlName="password" type="password" required
+          <input id="password" name="password" formControlName="password" type="password" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="text-red-500 text-sm mt-1">
             La contraseña es requerida

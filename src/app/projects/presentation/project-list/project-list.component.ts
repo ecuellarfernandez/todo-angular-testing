@@ -61,8 +61,18 @@ export class ProjectListComponent implements OnInit {
     this.router.navigate(['/projects/new']);
   }
 
-  editProject(id: string): void {
+  editProject(id: string, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
     this.router.navigate([`/projects/${id}/edit`]);
+  }
+
+  viewTodoLists(id: string, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.router.navigate([`/projects/${id}/todolists`]);
   }
 
   deleteProject(id: string, event: Event): void {

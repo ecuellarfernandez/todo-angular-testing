@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
         next: (user) => {
           console.log('Usuario autenticado:', user);
           localStorage.setItem('jwt', user.token);
-          this.router.navigate(['/projects']);
+          this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           console.error('Error en la autenticación:', err);

@@ -1,0 +1,299 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-gray-900">Mi Panel</h1>
+      <div class="flex space-x-4">
+        <button (click)="createProject()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Nuevo Proyecto
+          </span>
+        </button>
+        <button (click)="logout()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Cerrar Sesión
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
+      {{ error }}
+    </div>
+
+    <!-- Empty Projects State -->
+    <div *ngIf="projects.length === 0 && !loading && !error" class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+      </svg>
+      <p class="mt-2 text-gray-500 mb-4">No tienes proyectos creados</p>
+      <button (click)="createProject()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105">
+        Crear primer proyecto
+      </button>
+    </div>
+
+    <!-- Projects Accordion -->
+    <div *ngIf="projects.length > 0 && !loading && !error" class="space-y-4">
+      <div *ngFor="let project of projects; let i = index" class="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
+        <!-- Project Header (Always visible) -->
+        <div class="px-4 py-5 sm:px-6 flex justify-between items-center cursor-pointer" (click)="toggleProject(project.id)">
+          <div class="flex items-center space-x-2">
+            <svg class="h-5 w-5 text-gray-500 transform transition-transform duration-300" [ngClass]="{'rotate-90': expandedProjects.includes(project.id)}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900">{{ project.name }}</h3>
+          </div>
+          <div class="flex space-x-2">
+            <button (click)="editProject(project.id, $event)" class="text-gray-400 hover:text-blue-500 focus:outline-none" title="Editar proyecto">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+            </button>
+            <button (click)="deleteProject(project.id, $event)" class="text-gray-400 hover:text-red-500 focus:outline-none" title="Eliminar proyecto">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Project Content (Expandable) -->
+        <div *ngIf="expandedProjects.includes(project.id)" class="border-t border-gray-200 overflow-hidden transition-all duration-300 ease-in-out" 
+             [ngClass]="{'max-h-0': !expandedProjects.includes(project.id), 'max-h-full': expandedProjects.includes(project.id)}">
+          <!-- Project Description -->
+          <div class="px-4 py-3 bg-gray-50">
+            <p *ngIf="project.description" class="text-sm text-gray-600">{{ project.description }}</p>
+            <p *ngIf="!project.description" class="text-sm text-gray-400 italic">Sin descripción</p>
+            <div class="mt-2 text-xs text-gray-500">
+              Creado: {{ project.createdAt | date:'dd/MM/yyyy' }}
+            </div>
+          </div>
+
+          <!-- TodoLists Section -->
+          <div class="px-4 py-3">
+            <div class="flex justify-between items-center mb-3">
+              <h4 class="text-md font-medium text-gray-700">Listas de Tareas</h4>
+              <button (click)="createTodoList(project.id, $event)" class="text-sm px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 focus:outline-none transition-colors duration-200">
+                <span class="flex items-center">
+                  <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                  </svg>
+                  Nueva Lista
+                </span>
+              </button>
+            </div>
+
+            <!-- TodoList Loading -->
+            <div *ngIf="loadingTodoLists[project.id]" class="flex justify-center items-center py-4">
+              <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+
+            <!-- TodoList Error -->
+            <div *ngIf="todoListErrors[project.id] && !loadingTodoLists[project.id]" class="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md mb-3 text-sm">
+              {{ todoListErrors[project.id] }}
+            </div>
+
+            <!-- Empty TodoLists -->
+            <div *ngIf="!loadingTodoLists[project.id] && (!projectTodoLists[project.id] || projectTodoLists[project.id].length === 0) && !todoListErrors[project.id]" class="text-center py-4">
+              <p class="text-sm text-gray-500">No hay listas de tareas</p>
+            </div>
+
+            <!-- TodoLists Accordion -->
+            <div *ngIf="!loadingTodoLists[project.id] && projectTodoLists[project.id] && projectTodoLists[project.id].length > 0" class="space-y-2">
+              <div *ngFor="let todoList of projectTodoLists[project.id]" class="border border-gray-200 rounded-md overflow-hidden">
+                <!-- TodoList Header -->
+                <div class="px-3 py-2 bg-gray-50 flex justify-between items-center cursor-pointer" (click)="toggleTodoList(project.id, todoList.id)">
+                  <div class="flex items-center space-x-2">
+                    <svg class="h-4 w-4 text-gray-500 transform transition-transform duration-300" [ngClass]="{'rotate-90': isExpandedTodoList(project.id, todoList.id)}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    <h5 class="text-sm font-medium text-gray-800">{{ todoList.name }}</h5>
+                  </div>
+                  <div class="flex space-x-2">
+                    <button (click)="editTodoList(project.id, todoList.id, $event)" class="text-gray-400 hover:text-blue-500 focus:outline-none" title="Editar lista">
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                      </svg>
+                    </button>
+                    <button (click)="deleteTodoList(project.id, todoList.id, $event)" class="text-gray-400 hover:text-red-500 focus:outline-none" title="Eliminar lista">
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Tasks Section (Expandable) -->
+                <div *ngIf="isExpandedTodoList(project.id, todoList.id)" class="px-3 py-2 transition-all duration-300 ease-in-out">
+                  <div class="flex justify-between items-center mb-2">
+                    <h6 class="text-xs font-medium text-gray-600">Tareas</h6>
+                    <button (click)="createTask(project.id, todoList.id, $event)" class="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 focus:outline-none transition-colors duration-200">
+                      <span class="flex items-center">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Nueva Tarea
+                      </span>
+                    </button>
+                  </div>
+
+                  <!-- Tasks Loading -->
+                  <div *ngIf="loadingTasks[todoList.id]" class="flex justify-center items-center py-3">
+                    <div class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-blue-500"></div>
+                  </div>
+
+                  <!-- Tasks Error -->
+                  <div *ngIf="taskErrors[todoList.id] && !loadingTasks[todoList.id]" class="bg-red-50 border border-red-200 text-red-700 px-2 py-1 rounded-md mb-2 text-xs">
+                    {{ taskErrors[todoList.id] }}
+                  </div>
+
+                  <!-- Empty Tasks -->
+                  <div *ngIf="!loadingTasks[todoList.id] && (!todoListTasks[todoList.id] || todoListTasks[todoList.id].length === 0) && !taskErrors[todoList.id]" class="text-center py-3">
+                    <p class="text-xs text-gray-500">No hay tareas en esta lista</p>
+                  </div>
+
+                  <!-- Tasks List -->
+                  <div *ngIf="!loadingTasks[todoList.id] && todoListTasks[todoList.id] && todoListTasks[todoList.id].length > 0">
+                    <!-- Pending Tasks Section -->
+                    <div *ngIf="getPendingTasks(todoList.id).length > 0" class="mb-3">
+                      <h6 class="text-xs font-medium text-gray-500 mb-1">Pendientes</h6>
+                      <div class="space-y-2">
+                        <div *ngFor="let task of getPendingTasks(todoList.id)" 
+                             class="bg-white p-2 rounded border-l-4 border-yellow-500 transition-all duration-200">
+                          <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-2 flex-grow">
+                              <input 
+                                type="checkbox" 
+                                [checked]="task.completed" 
+                                (change)="toggleTaskStatus(project.id, todoList.id, task, $event)" 
+                                class="mt-1 h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
+                                title="Marcar como completada"
+                              >
+                              <div class="flex-grow">
+                                <h3 class="text-sm font-medium">{{ task.title }}</h3>
+                                <p *ngIf="task.description" class="text-xs text-gray-600 mt-1 line-clamp-2">{{ task.description }}</p>
+                                <div *ngIf="task.dueDate" class="mt-1 text-xs flex items-center text-gray-500">
+                                  {{ task.dueDate | date:'dd/MM/yyyy' }}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="flex space-x-1">
+                              <button (click)="editTask(project.id, todoList.id, task.id, $event)" class="text-gray-400 hover:text-blue-500 focus:outline-none" title="Editar tarea">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                              </button>
+                              <button (click)="deleteTask(project.id, todoList.id, task.id, $event)" class="text-gray-400 hover:text-red-500 focus:outline-none" title="Eliminar tarea">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Completed Tasks Section -->
+                    <div *ngIf="getCompletedTasks(todoList.id).length > 0">
+                      <h6 class="text-xs font-medium text-gray-500 mb-1">Completadas</h6>
+                      <div class="space-y-2">
+                        <div *ngFor="let task of getCompletedTasks(todoList.id)" 
+                             class="bg-white p-2 rounded border-l-4 border-green-500 transition-all duration-200">
+                          <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-2 flex-grow">
+                              <input 
+                                type="checkbox" 
+                                [checked]="task.completed" 
+                                (change)="toggleTaskStatus(project.id, todoList.id, task, $event)" 
+                                class="mt-1 h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
+                                title="Marcar como pendiente"
+                              >
+                              <div class="flex-grow">
+                                <h3 class="text-sm font-medium completed">{{ task.title }}</h3>
+                                <p *ngIf="task.description" class="text-xs text-gray-400 mt-1 line-clamp-2 completed">{{ task.description }}</p>
+                                <div *ngIf="task.dueDate" class="mt-1 text-xs text-gray-400">
+                                  {{ task.dueDate | date:'dd/MM/yyyy' }}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="flex space-x-1">
+                              <button (click)="deleteTask(project.id, todoList.id, task.id, $event)" class="text-gray-400 hover:text-red-500 focus:outline-none" title="Eliminar tarea">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Tasks Section -->
+    <div *ngIf="recentTasks.length > 0 && !loadingTasks && !errorTasks" class="mt-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Tareas Recientes</h2>
+      <div class="space-y-3">
+        <div *ngFor="let task of recentTasks" 
+             class="bg-white p-4 rounded-lg shadow-sm border-l-4 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+             [ngClass]="{'border-green-500': task.completed, 'border-yellow-500': !task.completed}"
+             (click)="navigateToProject(task.projectId, task.todoListId)">
+          <div class="flex items-start space-x-3">
+            <div class="flex-shrink-0 mt-1">
+              <div class="h-4 w-4 rounded-full" 
+                   [ngClass]="{'bg-green-500': task.completed, 'bg-yellow-500': !task.completed}"></div>
+            </div>
+            <div class="flex-grow">
+              <h3 class="text-md font-medium" [class.completed]="task.completed">{{ task.title }}</h3>
+              <div *ngIf="task.dueDate" class="mt-1 text-xs flex items-center text-gray-500">
+                {{ task.dueDate | date:'dd/MM/yyyy' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Modales -->
+  <app-todolist-modal
+    [isOpen]="todoListModalOpen"
+    [isEditMode]="todoListEditMode"
+    [projectId]="selectedProjectId"
+    [todoList]="selectedTodoList"
+    (close)="onTodoListModalClose()"
+    (save)="onTodoListSave($event)"
+  ></app-todolist-modal>
+
+  <app-task-modal
+    [isOpen]="taskModalOpen"
+    [isEditMode]="taskEditMode"
+    [projectId]="selectedProjectId"
+    [todoListId]="selectedTodoListId"
+    [task]="selectedTask"
+    (close)="onTaskModalClose()"
+    (save)="onTaskSave($event)"
+  ></app-task-modal>
+</div>

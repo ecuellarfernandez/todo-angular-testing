@@ -42,20 +42,34 @@
 
     <!-- Project List -->
     <div *ngIf="!loading && !error && projects.length > 0" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <div *ngFor="let project of projects" (click)="editProject(project.id)" class="bg-white overflow-hidden shadow rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-shadow">
+      <div *ngFor="let project of projects" class="bg-white overflow-hidden shadow rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
         <div class="px-4 py-5 sm:p-6">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-medium text-gray-900 truncate">{{ project.name }}</h3>
-            <button (click)="deleteProject(project.id, $event)" class="text-gray-400 hover:text-red-500 focus:outline-none">
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-              </svg>
-            </button>
+            <div class="flex space-x-2">
+              <button (click)="viewTodoLists(project.id, $event)" class="text-gray-400 hover:text-blue-500 focus:outline-none" title="Ver listas de tareas">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+              </button>
+              <button (click)="editProject(project.id, $event)" class="text-gray-400 hover:text-blue-500 focus:outline-none" title="Editar proyecto">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </button>
+              <button (click)="deleteProject(project.id, $event)" class="text-gray-400 hover:text-red-500 focus:outline-none" title="Eliminar proyecto">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              </button>
+            </div>
           </div>
-          <p *ngIf="project.description" class="mt-2 text-sm text-gray-500 line-clamp-2">{{ project.description }}</p>
-          <p *ngIf="!project.description" class="mt-2 text-sm text-gray-400 italic">Sin descripción</p>
-          <div class="mt-4 text-xs text-gray-500">
-            Creado: {{ project.createdAt | date:'dd/MM/yyyy' }}
+          <div (click)="viewTodoLists(project.id, $event)" class="cursor-pointer">
+            <p *ngIf="project.description" class="mt-2 text-sm text-gray-500 line-clamp-2">{{ project.description }}</p>
+            <p *ngIf="!project.description" class="mt-2 text-sm text-gray-400 italic">Sin descripción</p>
+            <div class="mt-4 text-xs text-gray-500">
+              Creado: {{ project.createdAt | date:'dd/MM/yyyy' }}
+            </div>
           </div>
         </div>
       </div>
