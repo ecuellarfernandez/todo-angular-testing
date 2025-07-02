@@ -11,15 +11,44 @@ export class DialogService {
 
   /**
    * Muestra un diálogo de confirmación
-   * @param options Opciones del diálogo
+   * @param titleOrOptions Título del diálogo o un objeto con las opciones
+   * @param message Mensaje del diálogo (opcional si se pasa un objeto de opciones)
+   * @param confirmButtonText Texto del botón de confirmación (opcional si se pasa un objeto de opciones)
+   * @param cancelButtonText Texto del botón de cancelación (opcional)
    * @returns Promesa que se resuelve con true si el usuario confirma, false si cancela
    */
-  confirm(options: {
-    title?: string;
-    message?: string;
-    confirmButtonText?: string;
-    cancelButtonText?: string;
-  }): Promise<boolean> {
+  confirm(
+    titleOrOptions: string | {
+      title?: string;
+      message?: string;
+      confirmButtonText?: string;
+      cancelButtonText?: string;
+    },
+    message?: string,
+    confirmButtonText?: string,
+    cancelButtonText?: string
+  ): Promise<boolean> {
+    // Determinar los valores a usar basados en el tipo de parámetros recibidos
+    let title: string;
+    let msg: string;
+    let confirmText: string;
+    let cancelText: string | undefined;
+    
+    if (typeof titleOrOptions === 'object') {
+      // Caso: se pasó un objeto de opciones
+      const options = titleOrOptions;
+      title = options.title || 'Confirmar';
+      msg = options.message || '¿Está seguro de que desea realizar esta acción?';
+      confirmText = options.confirmButtonText || 'Confirmar';
+      cancelText = options.cancelButtonText || 'Cancelar';
+    } else {
+      // Caso: se pasaron parámetros individuales
+      title = titleOrOptions;
+      msg = message || '¿Está seguro de que desea realizar esta acción?';
+      confirmText = confirmButtonText || 'Confirmar';
+      cancelText = cancelButtonText || 'Cancelar';
+    }
+    
     return new Promise<boolean>((resolve) => {
       // Si ya hay un diálogo abierto, lo cerramos
       this.closeDialog();
@@ -31,10 +60,10 @@ export class DialogService {
 
       // Configuramos las propiedades del diálogo
       const instance = this.dialogComponentRef.instance;
-      instance.title = options.title || 'Confirmar';
-      instance.message = options.message || '¿Está seguro de que desea realizar esta acción?';
-      instance.confirmButtonText = options.confirmButtonText || 'Confirmar';
-      instance.cancelButtonText = options.cancelButtonText || 'Cancelar';
+      instance.title = title;
+      instance.message = msg;
+      instance.confirmButtonText = confirmText;
+      instance.cancelButtonText = cancelText;
       instance.isOpen = true;
 
       // Manejamos los eventos
