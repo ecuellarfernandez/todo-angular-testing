@@ -23,7 +23,8 @@ export class TaskRepositoryImpl implements TaskRepository {
     return this.http.post<Task>(`${this.baseApiUrl}/projects/${projectId}/todolists/${todoListId}/tasks`, {
       title,
       description,
-      dueDate
+      dueDate,
+      completed: false // Asegurar que las tareas nuevas siempre se creen como no completadas
     });
   }
 

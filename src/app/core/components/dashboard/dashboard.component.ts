@@ -435,9 +435,12 @@ export class DashboardComponent implements OnInit {
   }
   
   onTaskModalClose(): void {
+    // Cerrar el modal y resetear completamente su estado
     this.taskModalOpen = false;
     this.selectedTask = null;
     this.taskEditMode = false;
+    this.selectedProjectId = '';
+    this.selectedTodoListId = '';
   }
   
   onTaskSave(data: {projectId: string, todoListId: string, taskId?: string, task: Partial<Task>}): void {
@@ -474,6 +477,9 @@ export class DashboardComponent implements OnInit {
       // Crear nueva tarea
       this.createTaskUseCase.execute(data.projectId, data.todoListId, data.task.title || '', data.task.description, data.task.dueDate).subscribe({
         next: (newTask) => {
+          // Asegurar que la tarea recién creada esté marcada como no completada
+          newTask.completed = false;
+          
           // Añadir la nueva tarea al array local
           if (!this.todoListTasks[data.todoListId]) {
             this.todoListTasks[data.todoListId] = [];
@@ -487,6 +493,8 @@ export class DashboardComponent implements OnInit {
           }
           
           this.taskModalOpen = false;
+          this.selectedTask = null;
+          this.taskEditMode = false;
         },
         error: (err) => {
           console.error('Error creating task', err);
@@ -561,10 +569,4 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  isOverdue(task: Task): boolean {
-    if (!task.dueDate || task.completed) return false;
-    const dueDate = new Date(task.dueDate);
-    const today = new Date();
-    return dueDate < today;
-  }
 }

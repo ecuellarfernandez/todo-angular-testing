@@ -167,13 +167,4 @@ export class TaskListComponent implements OnInit {
     this.router.navigate(['/projects']);
   }
 
-  isOverdue(task: Task): boolean {
-    if (!task.dueDate || task.completed) return false;
-    const dueDate = new Date(task.dueDate);
-    const today = new Date();
-    // Resetear las horas para comparar solo las fechas
-    today.setHours(0, 0, 0, 0);
-    dueDate.setHours(0, 0, 0, 0);
-    return dueDate < today;
-  }
 }
