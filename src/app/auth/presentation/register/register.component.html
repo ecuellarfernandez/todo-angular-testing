@@ -14,7 +14,7 @@
       <div class="space-y-4">
         <div>
           <label for="username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
-          <input id="username" formControlName="username" type="text" required
+          <input id="username" name="username" formControlName="username" type="text" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="text-red-500 text-sm mt-1">
             El nombre de usuario es requerido
@@ -23,7 +23,7 @@
 
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">Nombre completo</label>
-          <input id="name" formControlName="name" type="text" required
+          <input id="name" name="name" formControlName="name" type="text" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-sm mt-1">
             El nombre es requerido
@@ -32,7 +32,7 @@
 
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-          <input id="email" formControlName="email" type="email" required
+          <input id="email" name="email" formControlName="email" type="email" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="text-red-500 text-sm mt-1">
             <span *ngIf="form.get('email')?.errors?.['required']">El correo electrónico es requerido</span>
@@ -42,7 +42,7 @@
 
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-          <input id="password" formControlName="password" type="password" required
+          <input id="password" name="password" formControlName="password" type="password" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="text-red-500 text-sm mt-1">
             <span *ngIf="form.get('password')?.errors?.['required']">La contraseña es requerida</span>
@@ -52,7 +52,7 @@
 
         <div>
           <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
-          <input id="confirmPassword" formControlName="confirmPassword" type="password" required
+          <input id="confirmPassword" name="confirmPassword" formControlName="confirmPassword" type="password" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched" class="text-red-500 text-sm mt-1">
             <span *ngIf="form.get('confirmPassword')?.errors?.['required']">Confirme su contraseña</span>
