@@ -44,12 +44,12 @@ export class RegisterComponent implements OnInit {
   passwordMatchValidator(form: any) {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
-    
+
     if (password !== confirmPassword) {
       form.get('confirmPassword').setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
-    
+
     return null;
   }
 
@@ -64,7 +64,7 @@ export class RegisterComponent implements OnInit {
         next: (user) => {
           console.log('Usuario registrado:', user);
           localStorage.setItem('jwt', user.token);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/login']);
         },
         error: (err) => {
           console.error('Error en el registro:', err);
