@@ -56,7 +56,7 @@
     <!-- Lista de tareas -->
     <div *ngIf="!isLoading && !error && tasks.length > 0" class="space-y-4">
       <div *ngFor="let task of tasks" class="bg-white shadow-md rounded-lg p-4 border-l-4 task-card transition-all duration-200" 
-           [ngClass]="{'border-green-500': task.completed, 'border-yellow-500': !task.completed, 'border-red-500': isOverdue(task) && !task.completed}">
+           [ngClass]="{'border-green-500': task.completed, 'border-yellow-500': !task.completed}">
         <div class="flex items-start justify-between">
           <div class="flex items-start space-x-3 flex-grow">
             <input 
@@ -73,11 +73,7 @@
               <p *ngIf="task.description" class="text-gray-600 mt-1" [class.text-gray-400]="task.completed">
                 {{ task.description }}
               </p>
-              <div *ngIf="task.dueDate" class="mt-2 text-sm flex items-center" 
-                   [ngClass]="{'text-red-600 font-medium': isOverdue(task) && !task.completed, 'text-gray-500': !isOverdue(task) || task.completed}">
-                <svg *ngIf="isOverdue(task) && !task.completed" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <div *ngIf="task.dueDate" class="mt-2 text-sm flex items-center text-gray-500">
                 Fecha límite: {{ task.dueDate | date:'dd/MM/yyyy' }}
               </div>
             </div>

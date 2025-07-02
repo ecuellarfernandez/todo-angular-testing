@@ -32,7 +32,11 @@ export class TaskModalComponent {
   }
   
   ngOnChanges(): void {
+    // Resetear el estado de envío cada vez que cambian las propiedades
+    this.submitting = false;
+    
     if (this.task && this.isEditMode) {
+      // Modo edición: cargar datos de la tarea existente
       this.form.patchValue({
         title: this.task.title,
         description: this.task.description,
@@ -40,7 +44,11 @@ export class TaskModalComponent {
         completed: this.task.completed
       });
     } else {
+      // Modo creación: resetear completamente el formulario
       this.form.reset({
+        title: '',
+        description: '',
+        dueDate: null,
         completed: false
       });
     }
@@ -59,7 +67,7 @@ export class TaskModalComponent {
       title: formValue.title,
       description: formValue.description,
       dueDate: formValue.dueDate,
-      completed: formValue.completed
+      completed: false // Siempre establecer como false para nuevas tareas
     };
     
     this.save.emit({
@@ -68,12 +76,26 @@ export class TaskModalComponent {
       taskId: this.isEditMode ? this.task?.id : undefined,
       task: taskData
     });
+    
+    // Resetear el estado de envío después de emitir el evento
+    setTimeout(() => {
+      this.submitting = false;
+    }, 0);
   }
   
   onClose(): void {
+    // Resetear completamente el formulario
     this.form.reset({
+      title: '',
+      description: '',
+      dueDate: null,
       completed: false
     });
+    
+    // Resetear el estado de envío
+    this.submitting = false;
+    
+    // Emitir evento de cierre
     this.close.emit();
   }
   
