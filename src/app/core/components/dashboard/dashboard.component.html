@@ -290,10 +290,17 @@
   <app-task-modal
     [isOpen]="taskModalOpen"
     [isEditMode]="taskEditMode"
-    [projectId]="selectedProjectId"
     [todoListId]="selectedTodoListId"
     [task]="selectedTask"
     (close)="onTaskModalClose()"
     (save)="onTaskSave($event)"
   ></app-task-modal>
+
+  <app-project-modal
+    [isOpen]="projectModalOpen"
+    [isEditMode]="projectEditMode"
+    [project]="selectedProject"
+    (close)="onProjectModalClose()"
+    (save)="onProjectSave($event)"
+  ></app-project-modal>
 </div>

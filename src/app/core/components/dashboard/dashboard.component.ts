@@ -13,6 +13,8 @@ import { CreateTodoListUseCase } from '../../../todolists/domain/usecases/create
 import { UpdateTodoListUseCase } from '../../../todolists/domain/usecases/update-todolist.usecase';
 import { CreateTaskUseCase } from '../../../tasks/domain/usecases/create-task.usecase';
 import { UpdateTaskUseCase } from '../../../tasks/domain/usecases/update-task.usecase';
+import { CreateProjectUseCase } from '../../../projects/domain/usecases/create-project.usecase';
+import { UpdateProjectUseCase } from '../../../projects/domain/usecases/update-project.usecase';
 import { Project } from '../../../projects/domain/models/project.model';
 import { Task } from '../../../tasks/domain/models/task.model';
 import { TodoList } from '../../../todolists/domain/models/todolist.model';
@@ -24,12 +26,13 @@ import { TaskRepositoryImpl } from '../../../tasks/data/task-repository.impl';
 import { TodoListRepositoryImpl } from '../../../todolists/data/todolist-repository.impl';
 import { TodoListModalComponent } from '../todolist-modal/todolist-modal.component';
 import { TaskModalComponent } from '../task-modal/task-modal.component';
+import { ProjectModalComponent } from '../project-modal/project-modal.component';
 import { DialogService } from '../../services/dialog.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TodoListModalComponent, TaskModalComponent],
+  imports: [CommonModule, TodoListModalComponent, TaskModalComponent, ProjectModalComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   providers: [
@@ -45,6 +48,8 @@ import { DialogService } from '../../services/dialog.service';
     UpdateTodoListUseCase,
     CreateTaskUseCase,
     UpdateTaskUseCase,
+    CreateProjectUseCase,
+    UpdateProjectUseCase,
     { provide: ProjectRepository, useClass: ProjectRepositoryImpl },
     { provide: TaskRepository, useClass: TaskRepositoryImpl },
     { provide: TodoListRepository, useClass: TodoListRepositoryImpl },
@@ -80,6 +85,10 @@ export class DashboardComponent implements OnInit {
   taskEditMode = false;
   selectedTodoListId = '';
   selectedTask: Task | null = null;
+  
+  projectModalOpen = false;
+  projectEditMode = false;
+  selectedProject: Project | null = null;
 
   constructor(
     private getProjectsUseCase: GetProjectsUseCase,
@@ -94,6 +103,8 @@ export class DashboardComponent implements OnInit {
     private updateTodoListUseCase: UpdateTodoListUseCase,
     private createTaskUseCase: CreateTaskUseCase,
     private updateTaskUseCase: UpdateTaskUseCase,
+    private createProjectUseCase: CreateProjectUseCase,
+    private updateProjectUseCase: UpdateProjectUseCase,
     private dialogService: DialogService,
     private router: Router
   ) {}
@@ -238,12 +249,79 @@ export class DashboardComponent implements OnInit {
   }
 
   createProject(): void {
-    this.router.navigate(['/projects/new']);
+    this.projectEditMode = false;
+    this.selectedProject = null;
+    this.projectModalOpen = true;
   }
 
   editProject(projectId: string, event: Event): void {
     event.stopPropagation();
-    this.router.navigate(['/projects', projectId, 'edit']);
+    this.projectEditMode = true;
+    
+    // Buscar el proyecto
+    const project = this.projects.find(p => p.id === projectId);
+    if (project) {
+      this.selectedProject = project;
+      this.projectModalOpen = true;
+    } else {
+      console.error('Project not found');
+      this.dialogService.confirm(
+        'Error',
+        'No se pudo encontrar el proyecto para editar.',
+        'Aceptar'
+      );
+    }
+  }
+  
+  onProjectModalClose(): void {
+    this.projectModalOpen = false;
+    this.selectedProject = null;
+    this.projectEditMode = false;
+  }
+  
+  onProjectSave(data: {projectId?: string, project: Partial<Project>}): void {
+    if (this.projectEditMode && data.projectId) {
+      // Actualizar proyecto existente
+      this.updateProjectUseCase.execute(data.projectId, data.project.name || '', data.project.description).subscribe({
+        next: (updatedProject) => {
+          // Actualizar el proyecto en el array local
+          const index = this.projects.findIndex(p => p.id === data.projectId);
+          if (index !== -1) {
+            this.projects[index] = updatedProject;
+          }
+          this.projectModalOpen = false;
+          this.selectedProject = null;
+          this.projectEditMode = false;
+        },
+        error: (err) => {
+          console.error('Error updating project', err);
+          this.dialogService.confirm(
+            'Error',
+            'Error al actualizar el proyecto. Por favor, inténtalo de nuevo.',
+            'Aceptar'
+          );
+        }
+      });
+    } else {
+      // Crear nuevo proyecto
+      this.createProjectUseCase.execute(data.project.name || '', data.project.description).subscribe({
+        next: (newProject) => {
+          // Añadir el nuevo proyecto al array local
+          this.projects.push(newProject);
+          this.projectModalOpen = false;
+          this.selectedProject = null;
+          this.projectEditMode = false;
+        },
+        error: (err) => {
+          console.error('Error creating project', err);
+          this.dialogService.confirm(
+            'Error',
+            'Error al crear el proyecto. Por favor, inténtalo de nuevo.',
+            'Aceptar'
+          );
+        }
+      });
+    }
   }
 
   deleteProject(projectId: string, event: Event): void {
