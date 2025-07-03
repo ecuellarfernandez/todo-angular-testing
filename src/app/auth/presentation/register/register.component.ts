@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthRepositoryImpl } from '../../data/auth-repository.impl';
 import { RegisterUseCase } from '../../domain/usecases/register.usecase';
+import {emailValidator, passwordMatchValidator} from '../../../core/utils/validators';
 
 @Component({
   selector: 'app-register',
@@ -26,31 +27,19 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private registerUseCase: RegisterUseCase,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
       username: ['', [Validators.required]],
       name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, emailValidator]],
       password: ['', [Validators.required, Validators.minLength(3)]],
       confirmPassword: ['', [Validators.required]]
     }, {
-      validators: this.passwordMatchValidator
+      validators: passwordMatchValidator
     });
-  }
-
-  passwordMatchValidator(form: any) {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-
-    if (password !== confirmPassword) {
-      form.get('confirmPassword').setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
-
-    return null;
   }
 
   onSubmit() {
