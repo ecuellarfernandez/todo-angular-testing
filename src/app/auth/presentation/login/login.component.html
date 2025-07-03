@@ -18,6 +18,8 @@
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="text-red-500 text-sm mt-1">
             El correo electrónico es requerido
+            <span *ngIf="form.get('email')?.errors?.['required']">El correo electrónico es requerido</span>
+            <span *ngIf="form.get('email')?.errors?.['invalidEmail']">El correo electrónico es requerido</span>
           </div>
         </div>
 
