@@ -290,6 +290,7 @@
   <app-task-modal
     [isOpen]="taskModalOpen"
     [isEditMode]="taskEditMode"
+    [projectId]="selectedProjectId"
     [todoListId]="selectedTodoListId"
     [task]="selectedTask"
     (close)="onTaskModalClose()"
