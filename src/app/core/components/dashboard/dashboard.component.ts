@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 import { GetProjectsUseCase } from '../../../projects/domain/usecases/get-projects.usecase';
 import { GetRecentTasksUseCase } from '../../../tasks/domain/usecases/get-recent-tasks.usecase';
 import { GetTodoListsUseCase } from '../../../todolists/domain/usecases/get-todolists.usecase';
@@ -20,9 +20,11 @@ import { UpdateProjectUseCase } from '../../../projects/domain/usecases/update-p
 import { Project } from '../../../projects/domain/models/project.model';
 import { Task } from '../../../tasks/domain/models/task.model';
 import { TodoList } from '../../../todolists/domain/models/todolist.model';
+import { AuthRepository } from '../../../auth/domain/repositories/auth.repository';
 import { ProjectRepository } from '../../../projects/domain/repositories/project.repository';
 import { TaskRepository } from '../../../tasks/domain/repositories/task.repository';
 import { TodoListRepository } from '../../../todolists/domain/repositories/todolist.repository';
+import { AuthRepositoryImpl } from '../../../auth/data/auth-repository.impl';
 import { ProjectRepositoryImpl } from '../../../projects/data/project-repository.impl';
 import { TaskRepositoryImpl } from '../../../tasks/data/task-repository.impl';
 import { TodoListRepositoryImpl } from '../../../todolists/data/todolist-repository.impl';
@@ -53,6 +55,7 @@ import { DialogService } from '../../services/dialog.service';
     UpdateTasksOrderUseCase,
     CreateProjectUseCase,
     UpdateProjectUseCase,
+    { provide: AuthRepository, useClass: AuthRepositoryImpl },
     { provide: ProjectRepository, useClass: ProjectRepositoryImpl },
     { provide: TaskRepository, useClass: TaskRepositoryImpl },
     { provide: TodoListRepository, useClass: TodoListRepositoryImpl },
@@ -93,7 +96,11 @@ export class DashboardComponent implements OnInit {
   projectEditMode = false;
   selectedProject: Project | null = null;
 
+  // Usuario actual
+  userName: string = '';
+
   constructor(
+    private authRepository: AuthRepository,
     private getProjectsUseCase: GetProjectsUseCase,
     private getRecentTasksUseCase: GetRecentTasksUseCase,
     private getTodoListsUseCase: GetTodoListsUseCase,
@@ -114,8 +121,21 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadCurrentUser();
     this.loadProjects();
     this.loadRecentTasks();
+  }
+
+  loadCurrentUser(): void {
+    this.authRepository.getCurrentUser().subscribe({
+      next: (user: any) => {
+        this.userName = user.username || 'Usuario';
+      },
+      error: (err: any) => {
+        console.error('Error loading current user', err);
+        this.userName = 'Usuario'; // Fallback simple
+      }
+    });
   }
 
   loadProjects(): void {
