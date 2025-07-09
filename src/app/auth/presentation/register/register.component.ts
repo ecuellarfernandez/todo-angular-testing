@@ -4,7 +4,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthRepositoryImpl } from '../../data/auth-repository.impl';
 import { RegisterUseCase } from '../../domain/usecases/register.usecase';
-import {emailValidator, passwordMatchValidator} from '../../../core/utils/validators';
+import {
+  emailValidator, 
+  passwordMatchValidator, 
+  strongPasswordValidator, 
+  usernameValidator, 
+  noWhitespaceValidator
+} from '../../../core/utils/validators';
 
 @Component({
   selector: 'app-register',
@@ -32,11 +38,36 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      username: ['', [Validators.required]],
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email, emailValidator]],
-      password: ['', [Validators.required, Validators.minLength(3)]],
-      confirmPassword: ['', [Validators.required]]
+      username: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20),
+        usernameValidator,
+        noWhitespaceValidator
+      ]],
+      name: ['', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/),
+        noWhitespaceValidator
+      ]],
+      email: ['', [
+        Validators.required,
+        Validators.email,
+        emailValidator,
+        noWhitespaceValidator
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        strongPasswordValidator,
+        noWhitespaceValidator
+      ]],
+      confirmPassword: ['', [
+        Validators.required,
+        noWhitespaceValidator
+      ]]
     }, {
       validators: passwordMatchValidator
     });
