@@ -18,4 +18,8 @@ export class AuthRepositoryImpl implements AuthRepository {
   register(username: string, name: string, email: string, password: string): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/users/register`, { username, name, email, password });
   }
+
+  getCurrentUser(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/auth/me`);
+  }
 }
