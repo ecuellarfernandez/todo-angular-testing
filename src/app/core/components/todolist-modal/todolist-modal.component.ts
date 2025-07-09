@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TodoList } from '../../../todolists/domain/models/todolist.model';
+import { noWhitespaceValidator } from '../../utils/validators';
 
 @Component({
   selector: 'app-todolist-modal',
@@ -23,7 +24,12 @@ export class TodoListModalComponent {
   
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(100)]]
+      name: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        noWhitespaceValidator
+      ]]
     });
   }
   

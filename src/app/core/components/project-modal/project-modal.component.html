@@ -26,7 +26,9 @@
           >
           <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('name')?.errors?.['required']">El nombre es obligatorio.</div>
+            <div *ngIf="form.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres.</div>
             <div *ngIf="form.get('name')?.errors?.['maxlength']">El nombre no puede tener más de 100 caracteres.</div>
+            <div *ngIf="form.get('name')?.errors?.['whitespace']">El nombre no puede tener espacios al inicio o final.</div>
           </div>
         </div>
         
@@ -41,6 +43,7 @@
           ></textarea>
           <div *ngIf="form.get('description')?.invalid && form.get('description')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('description')?.errors?.['maxlength']">La descripción no puede tener más de 500 caracteres.</div>
+            <div *ngIf="form.get('description')?.errors?.['minWords']">La descripción debe tener al menos 3 palabras.</div>
           </div>
         </div>
       </div>
