@@ -41,7 +41,6 @@ export class LoginComponent implements OnInit {
       ]],
       password: ['', [
         Validators.required,
-        Validators.minLength(3),
         noWhitespaceValidator
       ]],
     });
