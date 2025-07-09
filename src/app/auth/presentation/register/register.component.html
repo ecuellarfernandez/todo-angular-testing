@@ -34,7 +34,7 @@
             <div *ngIf="form.get('name')?.errors?.['required']">El nombre es requerido</div>
             <div *ngIf="form.get('name')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</div>
             <div *ngIf="form.get('name')?.errors?.['maxlength']">El nombre no puede tener más de 50 caracteres</div>
-            <div *ngIf="form.get('name')?.errors?.['pattern']">El nombre solo puede contener letras y espacios</div>
+            <div *ngIf="form.get('name')?.errors?.['minWords']">El nombre debe contener al menos 2 palabras</div>
             <div *ngIf="form.get('name')?.errors?.['whitespace']">El nombre no puede tener espacios al inicio o final</div>
           </div>
         </div>
@@ -57,8 +57,7 @@
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('password')?.errors?.['required']">La contraseña es requerida</div>
-            <div *ngIf="form.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</div>
-            <div *ngIf="form.get('password')?.errors?.['minLength']">La contraseña debe tener al menos 8 caracteres</div>
+            <div *ngIf="form.get('password')?.errors?.['minlength'] || form.get('password')?.errors?.['minLength']">La contraseña debe tener al menos 8 caracteres</div>
             <div *ngIf="form.get('password')?.errors?.['lowercase']">La contraseña debe contener al menos una letra minúscula</div>
             <div *ngIf="form.get('password')?.errors?.['uppercase']">La contraseña debe contener al menos una letra mayúscula</div>
             <div *ngIf="form.get('password')?.errors?.['number']">La contraseña debe contener al menos un número</div>
