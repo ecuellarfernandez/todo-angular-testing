@@ -42,6 +42,12 @@ export class TaskRepositoryImpl implements TaskRepository {
     });
   }
 
+  updateTasksOrder(projectId: string, todoListId: string, taskIds: string[]): Observable<Task[]> {
+    return this.http.patch<Task[]>(`${this.baseApiUrl}/projects/${projectId}/todolists/${todoListId}/tasks/reorder`, {
+      taskIds
+    });
+  }
+
   deleteTask(projectId: string, todoListId: string, taskId: string): Observable<void> {
     return this.http.delete<void>(`${this.baseApiUrl}/projects/${projectId}/todolists/${todoListId}/tasks/${taskId}`);
   }
