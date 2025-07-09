@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {AuthRepository} from '../../domain/repositories/auth.repository';
 import {AuthRepositoryImpl} from '../../data/auth-repository.impl';
 import {LoginUseCase} from '../../domain/usecases/login.usecase';
+import {emailValidator, noWhitespaceValidator} from '../../../core/utils/validators';
 
 @Component({
   selector: 'app-login',
@@ -32,8 +33,17 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required],
+      email: ['', [
+        Validators.required,
+        Validators.email,
+        emailValidator,
+        noWhitespaceValidator
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        noWhitespaceValidator
+      ]],
     });
   }
 
