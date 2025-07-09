@@ -26,7 +26,7 @@
           >
           <div *ngIf="form.get('title')?.invalid && form.get('title')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('title')?.errors?.['required']">El título es obligatorio.</div>
-            <div *ngIf="form.get('title')?.errors?.['minlength']">El título debe tener al menos 3 caracteres.</div>
+            <div *ngIf="form.get('title')?.errors?.['minWords']">El título debe contener al menos 2 palabras</div>
             <div *ngIf="form.get('title')?.errors?.['maxlength']">El título no puede tener más de 100 caracteres.</div>
             <div *ngIf="form.get('title')?.errors?.['whitespace']">El título no puede tener espacios al inicio o final.</div>
           </div>
