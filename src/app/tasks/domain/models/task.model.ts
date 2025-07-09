@@ -7,4 +7,5 @@ export interface Task {
   todoListId: string;
   projectId: string;
   createdAt?: string;
+  position?: number;
 }

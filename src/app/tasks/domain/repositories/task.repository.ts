@@ -7,5 +7,6 @@ export abstract class TaskRepository {
   abstract createTask(projectId: string, todoListId: string, title: string, description?: string, dueDate?: string): Observable<Task>;
   abstract updateTask(projectId: string, todoListId: string, taskId: string, title: string, description?: string, dueDate?: string): Observable<Task>;
   abstract updateTaskStatus(projectId: string, todoListId: string, taskId: string, completed: boolean): Observable<Task>;
+  abstract updateTasksOrder(projectId: string, todoListId: string, taskIds: string[]): Observable<Task[]>;
   abstract deleteTask(projectId: string, todoListId: string, taskId: string): Observable<void>;
 }
