@@ -1,12 +1,13 @@
 describe('Registro y inicio de sesion', () => {
   beforeEach(() => {
     cy.visit('http://localhost:4200/register');
-  })
+  });
+
   it('deberia registrar y luego iniciar sesion correctamente', () => {
-    const userName = `testuser${Date.now()}`;
-    const name = `Test User ${Date.now()}`;
-    const email = `testuser${Date.now()}@example.com`;
-    const password = '123456';
+    const userName = `testuser${Date.now()}`.slice(0, 20); 
+    const name = 'Test User'; 
+    const email = `test${Date.now()}@example.com`; 
+    const password = 'Test@1234';
 
     cy.get('input[name="username"]').type(userName);
     cy.get('input[name="name"]').type(name);
@@ -16,6 +17,5 @@ describe('Registro y inicio de sesion', () => {
     cy.get('button[type="submit"]').click();
 
     cy.url().should('include', '/login');
-    }
-  );
+  });
 });
