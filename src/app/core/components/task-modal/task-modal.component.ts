@@ -27,9 +27,9 @@ export class TaskModalComponent {
     this.form = this.fb.group({
       title: ['', [
         Validators.required,
-        Validators.minLength(3),
         Validators.maxLength(100),
-        noWhitespaceValidator
+        noWhitespaceValidator,
+        minWordsValidator(2)
       ]],
       description: ['', [
         Validators.maxLength(500),
