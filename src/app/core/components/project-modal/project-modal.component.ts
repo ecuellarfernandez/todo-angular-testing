@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Project } from '../../../projects/domain/models/project.model';
+import { noWhitespaceValidator, minWordsValidator } from '../../utils/validators';
 
 @Component({
   selector: 'app-project-modal',
@@ -22,8 +23,16 @@ export class ProjectModalComponent {
   
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', Validators.maxLength(500)]
+      name: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        noWhitespaceValidator
+      ]],
+      description: ['', [
+        Validators.maxLength(500),
+        minWordsValidator(3)
+      ]]
     });
   }
   
