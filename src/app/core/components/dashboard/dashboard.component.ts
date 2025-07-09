@@ -424,6 +424,8 @@ export class DashboardComponent implements OnInit {
           }
           this.projectTodoLists[data.projectId].push(newTodoList);
           this.todoListModalOpen = false;
+          this.selectedTodoList = null;
+          this.todoListEditMode = false;
         },
         error: (err) => {
           console.error('Error creating todo list', err);

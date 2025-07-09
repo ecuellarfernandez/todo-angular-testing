@@ -26,7 +26,7 @@
           >
           <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('name')?.errors?.['required']">El nombre es obligatorio.</div>
-            <div *ngIf="form.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres.</div>
+            <div *ngIf="form.get('name')?.errors?.['minWords']">El nombre debe contener al menos 2 palabras.</div>
             <div *ngIf="form.get('name')?.errors?.['maxlength']">El nombre no puede tener más de 100 caracteres.</div>
             <div *ngIf="form.get('name')?.errors?.['whitespace']">El nombre no puede tener espacios al inicio o final.</div>
           </div>
