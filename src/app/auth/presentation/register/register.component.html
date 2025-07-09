@@ -17,7 +17,12 @@
           <input id="username" name="username" formControlName="username" type="text" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="text-red-500 text-sm mt-1">
-            El nombre de usuario es requerido
+            <div *ngIf="form.get('username')?.errors?.['required']">El nombre de usuario es requerido</div>
+            <div *ngIf="form.get('username')?.errors?.['minlength']">El nombre de usuario debe tener al menos 3 caracteres</div>
+            <div *ngIf="form.get('username')?.errors?.['maxlength']">El nombre de usuario no puede tener más de 20 caracteres</div>
+            <div *ngIf="form.get('username')?.errors?.['invalidUsername']">Solo se permiten letras, números y guiones bajos</div>
+            <div *ngIf="form.get('username')?.errors?.['startsWithNumber']">El nombre de usuario no puede empezar con un número</div>
+            <div *ngIf="form.get('username')?.errors?.['whitespace']">El nombre de usuario no puede tener espacios al inicio o final</div>
           </div>
         </div>
 
@@ -26,7 +31,11 @@
           <input id="name" name="name" formControlName="name" type="text" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-sm mt-1">
-            El nombre es requerido
+            <div *ngIf="form.get('name')?.errors?.['required']">El nombre es requerido</div>
+            <div *ngIf="form.get('name')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</div>
+            <div *ngIf="form.get('name')?.errors?.['maxlength']">El nombre no puede tener más de 50 caracteres</div>
+            <div *ngIf="form.get('name')?.errors?.['pattern']">El nombre solo puede contener letras y espacios</div>
+            <div *ngIf="form.get('name')?.errors?.['whitespace']">El nombre no puede tener espacios al inicio o final</div>
           </div>
         </div>
 
@@ -35,8 +44,10 @@
           <input id="email" name="email" formControlName="email" type="email" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="text-red-500 text-sm mt-1">
-            <span *ngIf="form.get('email')?.errors?.['required']">El correo electrónico es requerido</span>
-            <span *ngIf="form.get('email')?.errors?.['email']">Ingrese un correo electrónico válido</span>
+            <div *ngIf="form.get('email')?.errors?.['required']">El correo electrónico es requerido</div>
+            <div *ngIf="form.get('email')?.errors?.['email']">Ingrese un correo electrónico válido</div>
+            <div *ngIf="form.get('email')?.errors?.['invalidEmail']">El correo electrónico no tiene un formato válido</div>
+            <div *ngIf="form.get('email')?.errors?.['whitespace']">El correo no puede tener espacios al inicio o final</div>
           </div>
         </div>
 
@@ -45,8 +56,14 @@
           <input id="password" name="password" formControlName="password" type="password" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="text-red-500 text-sm mt-1">
-            <span *ngIf="form.get('password')?.errors?.['required']">La contraseña es requerida</span>
-            <span *ngIf="form.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 3 caracteres</span>
+            <div *ngIf="form.get('password')?.errors?.['required']">La contraseña es requerida</div>
+            <div *ngIf="form.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</div>
+            <div *ngIf="form.get('password')?.errors?.['minLength']">La contraseña debe tener al menos 8 caracteres</div>
+            <div *ngIf="form.get('password')?.errors?.['lowercase']">La contraseña debe contener al menos una letra minúscula</div>
+            <div *ngIf="form.get('password')?.errors?.['uppercase']">La contraseña debe contener al menos una letra mayúscula</div>
+            <div *ngIf="form.get('password')?.errors?.['number']">La contraseña debe contener al menos un número</div>
+            <div *ngIf="form.get('password')?.errors?.['specialChar']">La contraseña debe contener al menos un carácter especial</div>
+            <div *ngIf="form.get('password')?.errors?.['whitespace']">La contraseña no puede tener espacios al inicio o final</div>
           </div>
         </div>
 
@@ -55,8 +72,9 @@
           <input id="confirmPassword" name="confirmPassword" formControlName="confirmPassword" type="password" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           <div *ngIf="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched" class="text-red-500 text-sm mt-1">
-            <span *ngIf="form.get('confirmPassword')?.errors?.['required']">Confirme su contraseña</span>
-            <span *ngIf="form.get('confirmPassword')?.errors?.['passwordMismatch']">Las contraseñas no coinciden</span>
+            <div *ngIf="form.get('confirmPassword')?.errors?.['required']">Confirme su contraseña</div>
+            <div *ngIf="form.get('confirmPassword')?.errors?.['passwordMismatch']">Las contraseñas no coinciden</div>
+            <div *ngIf="form.get('confirmPassword')?.errors?.['whitespace']">La confirmación no puede tener espacios al inicio o final</div>
           </div>
         </div>
       </div>

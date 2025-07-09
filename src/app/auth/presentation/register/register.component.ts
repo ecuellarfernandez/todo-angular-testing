@@ -4,6 +4,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthRepositoryImpl } from '../../data/auth-repository.impl';
 import { RegisterUseCase } from '../../domain/usecases/register.usecase';
+import {
+  emailValidator, 
+  passwordMatchValidator, 
+  strongPasswordValidator, 
+  usernameValidator, 
+  noWhitespaceValidator
+} from '../../../core/utils/validators';
 
 @Component({
   selector: 'app-register',
@@ -26,31 +33,44 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private registerUseCase: RegisterUseCase,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      username: ['', [Validators.required]],
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(3)]],
-      confirmPassword: ['', [Validators.required]]
+      username: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20),
+        usernameValidator,
+        noWhitespaceValidator
+      ]],
+      name: ['', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/),
+        noWhitespaceValidator
+      ]],
+      email: ['', [
+        Validators.required,
+        Validators.email,
+        emailValidator,
+        noWhitespaceValidator
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        strongPasswordValidator,
+        noWhitespaceValidator
+      ]],
+      confirmPassword: ['', [
+        Validators.required,
+        noWhitespaceValidator
+      ]]
     }, {
-      validators: this.passwordMatchValidator
+      validators: passwordMatchValidator
     });
-  }
-
-  passwordMatchValidator(form: any) {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-
-    if (password !== confirmPassword) {
-      form.get('confirmPassword').setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
-
-    return null;
   }
 
   onSubmit() {

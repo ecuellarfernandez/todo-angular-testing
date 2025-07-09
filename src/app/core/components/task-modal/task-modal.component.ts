@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Task } from '../../../tasks/domain/models/task.model';
+import { noWhitespaceValidator, futureDateValidator, minWordsValidator } from '../../utils/validators';
 
 @Component({
   selector: 'app-task-modal',
@@ -24,9 +25,17 @@ export class TaskModalComponent {
   
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', Validators.maxLength(500)],
-      dueDate: [null],
+      title: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        noWhitespaceValidator
+      ]],
+      description: ['', [
+        Validators.maxLength(500),
+        minWordsValidator(2)
+      ]],
+      dueDate: [null, futureDateValidator],
       completed: [false]
     });
   }
