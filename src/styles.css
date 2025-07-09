@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+/* Estilos globales para placeholders */
+::placeholder {
+  color: #9ca3af;
+  opacity: 0.6;
+}
+
+::-webkit-input-placeholder {
+  color: #9ca3af;
+  opacity: 0.6;
+}
+
+::-moz-placeholder {
+  color: #9ca3af;
+  opacity: 0.6;
+}
+
+:-ms-input-placeholder {
+  color: #9ca3af;
+  opacity: 0.6;
+}
+
+:-moz-placeholder {
+  color: #9ca3af;
+  opacity: 0.6;
+}
