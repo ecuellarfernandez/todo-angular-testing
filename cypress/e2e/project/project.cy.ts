@@ -10,8 +10,8 @@ describe('Validaciones del formulario Nuevo Proyecto (Ejemplo real: Lista de Com
     cy.contains('Nuevo Proyecto').click();
     cy.get('app-project-modal').should('exist');
 
-    cy.get('input[placeholder="Nombre del proyecto"]').click();
-    cy.get('textarea[placeholder="Descripción del proyecto"]').click();
+    cy.get('[data-cy="project-name"]').click();
+    cy.get('[data-cy="project-description"]').click();
 
     cy.contains('El nombre es obligatorio.').should('be.visible');
   });
@@ -23,8 +23,8 @@ describe('Validaciones del formulario Nuevo Proyecto (Ejemplo real: Lista de Com
     cy.contains('Nuevo Proyecto').click();
     cy.get('app-project-modal').should('exist');
 
-    cy.get('input[placeholder="Nombre del proyecto"]').type('Compras');
-    cy.get('textarea[placeholder="Descripción del proyecto"]').click();
+    cy.get('[data-cy="project-name"]').type('Compras');
+    cy.get('[data-cy="project-description"]').click();
 
     cy.contains('El nombre debe contener al menos 2 palabras').should('be.visible');
   });
@@ -36,8 +36,8 @@ describe('Validaciones del formulario Nuevo Proyecto (Ejemplo real: Lista de Com
     cy.contains('Nuevo Proyecto').click();
     cy.get('app-project-modal').should('exist');
 
-    cy.get('input[placeholder="Nombre del proyecto"]').type(' Lista ');
-    cy.get('textarea[placeholder="Descripción del proyecto"]').click();
+    cy.get('[data-cy="project-name"]').type(' Lista ');
+    cy.get('[data-cy="project-description"]').click();
 
     cy.contains('El nombre debe contener al menos 2 palabras').should('be.visible');
     cy.contains('El nombre no puede tener espacios al inicio o final').should('be.visible');
@@ -50,9 +50,9 @@ describe('Validaciones del formulario Nuevo Proyecto (Ejemplo real: Lista de Com
     cy.contains('Nuevo Proyecto').click();
     cy.get('app-project-modal').should('exist');
 
-    cy.get('input[placeholder="Nombre del proyecto"]').type('Lista de Compras');
-    cy.get('textarea[placeholder="Descripción del proyecto"]').type('Lo que');
-    cy.get('input[placeholder="Nombre del proyecto"]').click(); // Cambiar foco
+    cy.get('[data-cy="project-name"]').type('Lista de Compras');
+    cy.get('[data-cy="project-description"]').type('Lo que');
+    cy.get('[data-cy="project-name"]').click(); // Cambiar foco
 
     cy.contains('La descripción debe tener al menos 3 palabras').should('be.visible');
   });
@@ -64,10 +64,10 @@ describe('Validaciones del formulario Nuevo Proyecto (Ejemplo real: Lista de Com
     cy.contains('Nuevo Proyecto').click();
     cy.get('app-project-modal').should('exist');
 
-    cy.get('input[placeholder="Nombre del proyecto"]').type('Lista de Compras');
-    cy.get('textarea[placeholder="Descripción del proyecto"]').type('Lo que me falta comprar');
+    cy.get('[data-cy="project-name"]').type('Lista de Compras');
+    cy.get('[data-cy="project-description"]').type('Lo que me falta comprar');
 
-    cy.get('button[type="submit"]')
+    cy.get('[data-cy="project-submit"]')
       .should('not.be.disabled')
       .click();
 
@@ -83,15 +83,15 @@ describe('Validaciones del formulario Nuevo Proyecto (Ejemplo real: Lista de Com
 
     cy.contains('Editar Proyecto').should('be.visible');
 
-    cy.get('input[placeholder="Nombre del proyecto"]')
+    cy.get('[data-cy="project-name"]')
       .clear()
       .type('Lista de compras del mercado');
 
-    cy.get('textarea[placeholder="Descripción del proyecto"]')
+    cy.get('[data-cy="project-description"]')
       .clear()
       .type('Todo lo que tengo que comprar hoy');
 
-    cy.contains('Actualizar').click();
+    cy.get('[data-cy="project-submit"]').click();
 
     cy.contains('Lista de compras del mercado').should('exist');
 

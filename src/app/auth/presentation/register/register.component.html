@@ -15,7 +15,8 @@
         <div>
           <label for="username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
           <input id="username" name="username" formControlName="username" type="text" required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            data-cy="register-username">
           <div *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('username')?.errors?.['required']">El nombre de usuario es requerido</div>
             <div *ngIf="form.get('username')?.errors?.['minlength']">El nombre de usuario debe tener al menos 3 caracteres</div>
@@ -29,7 +30,8 @@
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">Nombre completo</label>
           <input id="name" name="name" formControlName="name" type="text" required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            data-cy="register-name">
           <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('name')?.errors?.['required']">El nombre es requerido</div>
             <div *ngIf="form.get('name')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</div>
@@ -42,7 +44,8 @@
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
           <input id="email" name="email" formControlName="email" type="email" required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            data-cy="register-email">
           <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('email')?.errors?.['required']">El correo electrónico es requerido</div>
             <div *ngIf="form.get('email')?.errors?.['email']">Ingrese un correo electrónico válido</div>
@@ -54,7 +57,8 @@
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
           <input id="password" name="password" formControlName="password" type="password" required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            data-cy="register-password">
           <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('password')?.errors?.['required']">La contraseña es requerida</div>
             <div *ngIf="form.get('password')?.errors?.['minlength'] || form.get('password')?.errors?.['minLength']">La contraseña debe tener al menos 8 caracteres</div>
@@ -69,7 +73,8 @@
         <div>
           <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
           <input id="confirmPassword" name="confirmPassword" formControlName="confirmPassword" type="password" required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            data-cy="register-confirm-password">
           <div *ngIf="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('confirmPassword')?.errors?.['required']">Confirme su contraseña</div>
             <div *ngIf="form.get('confirmPassword')?.errors?.['passwordMismatch']">Las contraseñas no coinciden</div>
@@ -83,8 +88,9 @@
       </div>
 
       <div>
-        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Registrarse
+        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          data-cy="register-submit">
+          Crear cuenta
         </button>
       </div>
     </form>
