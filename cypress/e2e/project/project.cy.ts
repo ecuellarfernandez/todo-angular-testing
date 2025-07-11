@@ -1,7 +1,6 @@
 describe('Validaciones del formulario Nuevo Proyecto (Ejemplo real: Lista de Compras)', () => {
   beforeEach(() => {
-    cy.loginProgrammatically();
-    cy.visit('http://localhost:4200/dashboard');
+    cy.loginByApi()
   });
 
   /**
