@@ -2,10 +2,10 @@
 
 Para que el test automatizado de **inicio de sesión** funcione correctamente, es necesario que el siguiente usuario ya exista en la base de datos **antes de ejecutar el test**:
 
-| Campo      | Valor                 |
-|------------|-----------------------|
-| **Email**  | `testuser1@gmail.com` |
-| **Password** | `Testuser1!`         |
+| Campo      | Valor                     |
+|------------|---------------------------|
+| **Email**  | `andres.lopez@gmail.com`  |
+| **Password** | `AndresLopez123!`         |
 
 ### Requisitos:
 - El usuario debe estar previamente registrado en la base de datos.
