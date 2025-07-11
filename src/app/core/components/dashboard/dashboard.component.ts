@@ -657,7 +657,7 @@ export class DashboardComponent implements OnInit {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    localStorage.removeItem('jwt');
     this.router.navigate(['/login']);
   }
 
