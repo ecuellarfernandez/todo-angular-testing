@@ -98,5 +98,7 @@ describe('Validaciones del formulario Nuevo Proyecto (Ejemplo real: Lista de Com
     // Delete después de editar
     cy.get('button[title="Eliminar proyecto"]').last().click();
     cy.contains('button', 'Eliminar').click();
+
+    cy.contains('Lista de compras del mercado').should('not.exist');
   });
 });
