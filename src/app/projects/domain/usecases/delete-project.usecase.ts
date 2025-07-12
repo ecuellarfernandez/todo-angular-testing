@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProjectRepository } from '../repositories/project.repository';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DeleteProjectUseCase {
   constructor(private projectRepository: ProjectRepository) {}
 

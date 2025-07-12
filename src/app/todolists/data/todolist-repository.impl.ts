@@ -5,7 +5,9 @@ import { TodoListRepository } from '../domain/repositories/todolist.repository';
 import { TodoList } from '../domain/models/todolist.model';
 import { environment } from '../../../enviroments/enviroment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TodoListRepositoryImpl implements TodoListRepository {
   private baseApiUrl = environment.apiUrl;
 

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Project } from '../models/project.model';
 import { ProjectRepository } from '../repositories/project.repository';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class GetProjectsUseCase {
   constructor(private projectRepository: ProjectRepository) {}
 

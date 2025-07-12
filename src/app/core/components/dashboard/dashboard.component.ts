@@ -17,17 +17,10 @@ import { UpdateTaskUseCase } from '../../../tasks/domain/usecases/update-task.us
 import { UpdateTasksOrderUseCase } from '../../../tasks/domain/usecases/update-tasks-order.usecase';
 import { CreateProjectUseCase } from '../../../projects/domain/usecases/create-project.usecase';
 import { UpdateProjectUseCase } from '../../../projects/domain/usecases/update-project.usecase';
+import { GetCurrentUserUsecase } from '../../../auth/domain/usecases/get-current-user.usecase';
 import { Project } from '../../../projects/domain/models/project.model';
 import { Task } from '../../../tasks/domain/models/task.model';
 import { TodoList } from '../../../todolists/domain/models/todolist.model';
-import { AuthRepository } from '../../../auth/domain/repositories/auth.repository';
-import { ProjectRepository } from '../../../projects/domain/repositories/project.repository';
-import { TaskRepository } from '../../../tasks/domain/repositories/task.repository';
-import { TodoListRepository } from '../../../todolists/domain/repositories/todolist.repository';
-import { AuthRepositoryImpl } from '../../../auth/data/auth-repository.impl';
-import { ProjectRepositoryImpl } from '../../../projects/data/project-repository.impl';
-import { TaskRepositoryImpl } from '../../../tasks/data/task-repository.impl';
-import { TodoListRepositoryImpl } from '../../../todolists/data/todolist-repository.impl';
 import { TodoListModalComponent } from '../todolist-modal/todolist-modal.component';
 import { TaskModalComponent } from '../task-modal/task-modal.component';
 import { ProjectModalComponent } from '../project-modal/project-modal.component';
@@ -38,29 +31,7 @@ import { DialogService } from '../../services/dialog.service';
   standalone: true,
   imports: [CommonModule, DragDropModule, TodoListModalComponent, TaskModalComponent, ProjectModalComponent],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
-  providers: [
-    GetProjectsUseCase,
-    GetRecentTasksUseCase,
-    GetTodoListsUseCase,
-    GetTasksUseCase,
-    UpdateTaskStatusUseCase,
-    DeleteTaskUseCase,
-    DeleteTodoListUseCase,
-    DeleteProjectUseCase,
-    CreateTodoListUseCase,
-    UpdateTodoListUseCase,
-    CreateTaskUseCase,
-    UpdateTaskUseCase,
-    UpdateTasksOrderUseCase,
-    CreateProjectUseCase,
-    UpdateProjectUseCase,
-    { provide: AuthRepository, useClass: AuthRepositoryImpl },
-    { provide: ProjectRepository, useClass: ProjectRepositoryImpl },
-    { provide: TaskRepository, useClass: TaskRepositoryImpl },
-    { provide: TodoListRepository, useClass: TodoListRepositoryImpl },
-    DialogService
-  ]
+  styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
   projects: Project[] = [];
@@ -100,7 +71,7 @@ export class DashboardComponent implements OnInit {
   userName: string = '';
 
   constructor(
-    private authRepository: AuthRepository,
+    private getCurrentUserUsecase: GetCurrentUserUsecase,
     private getProjectsUseCase: GetProjectsUseCase,
     private getRecentTasksUseCase: GetRecentTasksUseCase,
     private getTodoListsUseCase: GetTodoListsUseCase,
@@ -127,11 +98,11 @@ export class DashboardComponent implements OnInit {
   }
 
   loadCurrentUser(): void {
-    this.authRepository.getCurrentUser().subscribe({
-      next: (user: any) => {
+    this.getCurrentUserUsecase.execute().subscribe({
+      next: (user) => {
         this.userName = user.username || 'Usuario';
       },
-      error: (err: any) => {
+      error: (err) => {
         console.error('Error loading current user', err);
         this.userName = 'Usuario'; // Fallback simple
       }

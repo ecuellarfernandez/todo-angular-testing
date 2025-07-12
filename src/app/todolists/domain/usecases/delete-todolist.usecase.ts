@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TodoListRepository } from '../repositories/todolist.repository';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DeleteTodoListUseCase {
   constructor(private todoListRepository: TodoListRepository) {}
 

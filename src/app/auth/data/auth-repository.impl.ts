@@ -5,7 +5,9 @@ import {AuthRepository} from '../domain/repositories/auth.repository';
 import {environment} from '../../../enviroments/enviroment';
 import {User} from '../domain/models/user.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthRepositoryImpl implements AuthRepository {
   private apiUrl = `${environment.apiUrl}`;
 

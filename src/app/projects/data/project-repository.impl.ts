@@ -5,7 +5,9 @@ import { ProjectRepository } from '../domain/repositories/project.repository';
 import { Project } from '../domain/models/project.model';
 import { environment } from '../../../enviroments/enviroment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProjectRepositoryImpl implements ProjectRepository {
   private apiUrl = `${environment.apiUrl}/projects`;
 
