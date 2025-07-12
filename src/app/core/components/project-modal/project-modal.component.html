@@ -23,6 +23,7 @@
             formControlName="name"
             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="Nombre del proyecto"
+            data-cy="project-name"
           >
           <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('name')?.errors?.['required']">El nombre es obligatorio.</div>
@@ -40,6 +41,7 @@
             rows="3"
             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="Descripción del proyecto"
+            data-cy="project-description"
           ></textarea>
           <div *ngIf="form.get('description')?.invalid && form.get('description')?.touched" class="text-red-500 text-sm mt-1">
             <div *ngIf="form.get('description')?.errors?.['maxlength']">La descripción no puede tener más de 500 caracteres.</div>
@@ -56,11 +58,10 @@
           class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Cancelar
         </button>
-        <button
-          type="submit"
-          [disabled]="submitting || form.invalid"
-          class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-          {{ isEditMode ? 'Actualizar' : 'Crear' }}
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          [disabled]="form.invalid"
+          data-cy="project-submit">
+          {{ isEditMode ? 'Actualizar' : 'Crear Proyecto' }}
         </button>
       </div>
     </form>

@@ -10,7 +10,7 @@ declare namespace Cypress {
                       title: string;
                       description: string;
                       dueDate?: string;
-    }): Chainable<void>
+    }): Chainable<void>;
   }
 }
 const apiUrl = Cypress.env('apiUrl');

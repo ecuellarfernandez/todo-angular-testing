@@ -2,13 +2,14 @@
   "name": "todo-angular-testing",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cy:open": "start-server-and-test start http://localhost:4200 cy:open:raw",
+    "cy:run": "start-server-and-test start http://localhost:4200 cy:run:raw",
+    "cy:open:raw": "cypress open",
+    "cy:run:raw": "cypress run"
   },
   "private": true,
   "dependencies": {
@@ -39,6 +40,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "start-server-and-test": "^2.0.12",
     "typescript": "~5.7.2"
   }
 }
