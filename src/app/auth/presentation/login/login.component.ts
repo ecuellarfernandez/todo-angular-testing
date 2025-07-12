@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {AuthRepository} from '../../domain/repositories/auth.repository';
 import {AuthRepositoryImpl} from '../../data/auth-repository.impl';
 import {LoginUseCase} from '../../domain/usecases/login.usecase';
 import {emailValidator, noWhitespaceValidator} from '../../../core/utils/validators';
@@ -24,9 +23,9 @@ import {emailValidator, noWhitespaceValidator} from '../../../core/utils/validat
 export class LoginComponent implements OnInit {
   form: any;
   errorMessage: string = '';
-  
+
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private loginUseCase: LoginUseCase,
     private router: Router
   ) {}
@@ -65,7 +64,7 @@ export class LoginComponent implements OnInit {
       this.form.markAllAsTouched();
     }
   }
-  
+
   navigateToRegister() {
     this.router.navigate(['/register']);
   }

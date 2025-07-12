@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 import { GetProjectsUseCase } from '../../../projects/domain/usecases/get-projects.usecase';
 import { GetRecentTasksUseCase } from '../../../tasks/domain/usecases/get-recent-tasks.usecase';
 import { GetTodoListsUseCase } from '../../../todolists/domain/usecases/get-todolists.usecase';
@@ -17,15 +17,10 @@ import { UpdateTaskUseCase } from '../../../tasks/domain/usecases/update-task.us
 import { UpdateTasksOrderUseCase } from '../../../tasks/domain/usecases/update-tasks-order.usecase';
 import { CreateProjectUseCase } from '../../../projects/domain/usecases/create-project.usecase';
 import { UpdateProjectUseCase } from '../../../projects/domain/usecases/update-project.usecase';
+import { GetCurrentUserUsecase } from '../../../auth/domain/usecases/get-current-user.usecase';
 import { Project } from '../../../projects/domain/models/project.model';
 import { Task } from '../../../tasks/domain/models/task.model';
 import { TodoList } from '../../../todolists/domain/models/todolist.model';
-import { ProjectRepository } from '../../../projects/domain/repositories/project.repository';
-import { TaskRepository } from '../../../tasks/domain/repositories/task.repository';
-import { TodoListRepository } from '../../../todolists/domain/repositories/todolist.repository';
-import { ProjectRepositoryImpl } from '../../../projects/data/project-repository.impl';
-import { TaskRepositoryImpl } from '../../../tasks/data/task-repository.impl';
-import { TodoListRepositoryImpl } from '../../../todolists/data/todolist-repository.impl';
 import { TodoListModalComponent } from '../todolist-modal/todolist-modal.component';
 import { TaskModalComponent } from '../task-modal/task-modal.component';
 import { ProjectModalComponent } from '../project-modal/project-modal.component';
@@ -36,28 +31,7 @@ import { DialogService } from '../../services/dialog.service';
   standalone: true,
   imports: [CommonModule, DragDropModule, TodoListModalComponent, TaskModalComponent, ProjectModalComponent],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
-  providers: [
-    GetProjectsUseCase,
-    GetRecentTasksUseCase,
-    GetTodoListsUseCase,
-    GetTasksUseCase,
-    UpdateTaskStatusUseCase,
-    DeleteTaskUseCase,
-    DeleteTodoListUseCase,
-    DeleteProjectUseCase,
-    CreateTodoListUseCase,
-    UpdateTodoListUseCase,
-    CreateTaskUseCase,
-    UpdateTaskUseCase,
-    UpdateTasksOrderUseCase,
-    CreateProjectUseCase,
-    UpdateProjectUseCase,
-    { provide: ProjectRepository, useClass: ProjectRepositoryImpl },
-    { provide: TaskRepository, useClass: TaskRepositoryImpl },
-    { provide: TodoListRepository, useClass: TodoListRepositoryImpl },
-    DialogService
-  ]
+  styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
   projects: Project[] = [];
@@ -93,7 +67,11 @@ export class DashboardComponent implements OnInit {
   projectEditMode = false;
   selectedProject: Project | null = null;
 
+  // Usuario actual
+  userName: string = '';
+
   constructor(
+    private getCurrentUserUsecase: GetCurrentUserUsecase,
     private getProjectsUseCase: GetProjectsUseCase,
     private getRecentTasksUseCase: GetRecentTasksUseCase,
     private getTodoListsUseCase: GetTodoListsUseCase,
@@ -114,8 +92,21 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadCurrentUser();
     this.loadProjects();
     this.loadRecentTasks();
+  }
+
+  loadCurrentUser(): void {
+    this.getCurrentUserUsecase.execute().subscribe({
+      next: (user) => {
+        this.userName = user.username || 'Usuario';
+      },
+      error: (err) => {
+        console.error('Error loading current user', err);
+        this.userName = 'Usuario'; // Fallback simple
+      }
+    });
   }
 
   loadProjects(): void {

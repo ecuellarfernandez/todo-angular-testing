@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Task } from '../models/task.model';
 import { TaskRepository } from '../repositories/task.repository';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UpdateTaskUseCase {
   constructor(private taskRepository: TaskRepository) {}
 

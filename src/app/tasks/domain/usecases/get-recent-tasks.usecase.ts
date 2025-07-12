@@ -6,7 +6,7 @@ import { TaskRepository } from '../repositories/task.repository';
 import { ProjectRepository } from '../../../projects/domain/repositories/project.repository';
 import { TodoListRepository } from '../../../todolists/domain/repositories/todolist.repository';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class GetRecentTasksUseCase {
   constructor(
     private taskRepository: TaskRepository,

@@ -5,7 +5,9 @@ import { TaskRepository } from '../domain/repositories/task.repository';
 import { Task } from '../domain/models/task.model';
 import { environment } from '../../../enviroments/enviroment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TaskRepositoryImpl implements TaskRepository {
   private baseApiUrl = environment.apiUrl;
 
