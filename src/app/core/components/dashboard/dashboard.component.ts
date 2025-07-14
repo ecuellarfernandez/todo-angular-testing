@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 import { GetProjectsUseCase } from '../../../projects/domain/usecases/get-projects.usecase';
 import { GetRecentTasksUseCase } from '../../../tasks/domain/usecases/get-recent-tasks.usecase';
 import { GetTodoListsUseCase } from '../../../todolists/domain/usecases/get-todolists.usecase';
@@ -13,17 +14,13 @@ import { CreateTodoListUseCase } from '../../../todolists/domain/usecases/create
 import { UpdateTodoListUseCase } from '../../../todolists/domain/usecases/update-todolist.usecase';
 import { CreateTaskUseCase } from '../../../tasks/domain/usecases/create-task.usecase';
 import { UpdateTaskUseCase } from '../../../tasks/domain/usecases/update-task.usecase';
+import { UpdateTasksOrderUseCase } from '../../../tasks/domain/usecases/update-tasks-order.usecase';
 import { CreateProjectUseCase } from '../../../projects/domain/usecases/create-project.usecase';
 import { UpdateProjectUseCase } from '../../../projects/domain/usecases/update-project.usecase';
+import { GetCurrentUserUsecase } from '../../../auth/domain/usecases/get-current-user.usecase';
 import { Project } from '../../../projects/domain/models/project.model';
 import { Task } from '../../../tasks/domain/models/task.model';
 import { TodoList } from '../../../todolists/domain/models/todolist.model';
-import { ProjectRepository } from '../../../projects/domain/repositories/project.repository';
-import { TaskRepository } from '../../../tasks/domain/repositories/task.repository';
-import { TodoListRepository } from '../../../todolists/domain/repositories/todolist.repository';
-import { ProjectRepositoryImpl } from '../../../projects/data/project-repository.impl';
-import { TaskRepositoryImpl } from '../../../tasks/data/task-repository.impl';
-import { TodoListRepositoryImpl } from '../../../todolists/data/todolist-repository.impl';
 import { TodoListModalComponent } from '../todolist-modal/todolist-modal.component';
 import { TaskModalComponent } from '../task-modal/task-modal.component';
 import { ProjectModalComponent } from '../project-modal/project-modal.component';
@@ -32,29 +29,9 @@ import { DialogService } from '../../services/dialog.service';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TodoListModalComponent, TaskModalComponent, ProjectModalComponent],
+  imports: [CommonModule, DragDropModule, TodoListModalComponent, TaskModalComponent, ProjectModalComponent],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
-  providers: [
-    GetProjectsUseCase,
-    GetRecentTasksUseCase,
-    GetTodoListsUseCase,
-    GetTasksUseCase,
-    UpdateTaskStatusUseCase,
-    DeleteTaskUseCase,
-    DeleteTodoListUseCase,
-    DeleteProjectUseCase,
-    CreateTodoListUseCase,
-    UpdateTodoListUseCase,
-    CreateTaskUseCase,
-    UpdateTaskUseCase,
-    CreateProjectUseCase,
-    UpdateProjectUseCase,
-    { provide: ProjectRepository, useClass: ProjectRepositoryImpl },
-    { provide: TaskRepository, useClass: TaskRepositoryImpl },
-    { provide: TodoListRepository, useClass: TodoListRepositoryImpl },
-    DialogService
-  ]
+  styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
   projects: Project[] = [];
@@ -90,7 +67,11 @@ export class DashboardComponent implements OnInit {
   projectEditMode = false;
   selectedProject: Project | null = null;
 
+  // Usuario actual
+  userName: string = '';
+
   constructor(
+    private getCurrentUserUsecase: GetCurrentUserUsecase,
     private getProjectsUseCase: GetProjectsUseCase,
     private getRecentTasksUseCase: GetRecentTasksUseCase,
     private getTodoListsUseCase: GetTodoListsUseCase,
@@ -103,6 +84,7 @@ export class DashboardComponent implements OnInit {
     private updateTodoListUseCase: UpdateTodoListUseCase,
     private createTaskUseCase: CreateTaskUseCase,
     private updateTaskUseCase: UpdateTaskUseCase,
+    private updateTasksOrderUseCase: UpdateTasksOrderUseCase,
     private createProjectUseCase: CreateProjectUseCase,
     private updateProjectUseCase: UpdateProjectUseCase,
     private dialogService: DialogService,
@@ -110,8 +92,21 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadCurrentUser();
     this.loadProjects();
     this.loadRecentTasks();
+  }
+
+  loadCurrentUser(): void {
+    this.getCurrentUserUsecase.execute().subscribe({
+      next: (user) => {
+        this.userName = user.username || 'Usuario';
+      },
+      error: (err) => {
+        console.error('Error loading current user', err);
+        this.userName = 'Usuario'; // Fallback simple
+      }
+    });
   }
 
   loadProjects(): void {
@@ -172,7 +167,15 @@ export class DashboardComponent implements OnInit {
 
     this.getTasksUseCase.execute(projectId, todoListId).subscribe({
       next: (tasks) => {
-        this.todoListTasks[todoListId] = tasks;
+        // Ordenar las tareas por posición si está disponible, sino por fecha de creación
+        const sortedTasks = tasks.sort((a, b) => {
+          if (a.position !== undefined && b.position !== undefined) {
+            return a.position - b.position;
+          }
+          // Fallback: ordenar por fecha de creación o mantener orden original
+          return 0;
+        });
+        this.todoListTasks[todoListId] = sortedTasks;
         this.loadingTasks[todoListId] = false;
       },
       error: (err) => {
@@ -424,6 +427,8 @@ export class DashboardComponent implements OnInit {
           }
           this.projectTodoLists[data.projectId].push(newTodoList);
           this.todoListModalOpen = false;
+          this.selectedTodoList = null;
+          this.todoListEditMode = false;
         },
         error: (err) => {
           console.error('Error creating todo list', err);
@@ -643,8 +648,60 @@ export class DashboardComponent implements OnInit {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    localStorage.removeItem('jwt');
     this.router.navigate(['/login']);
+  }
+
+  // Método auxiliar para encontrar el projectId de un todoListId
+  private findProjectIdByTodoListId(todoListId: string): string | null {
+    for (const projectId in this.projectTodoLists) {
+      const todoLists = this.projectTodoLists[projectId];
+      if (todoLists && todoLists.some(todoList => todoList.id === todoListId)) {
+        return projectId;
+      }
+    }
+    return null;
+  }
+
+  // Método para manejar drag and drop de tareas
+  onTaskDrop(event: CdkDragDrop<Task[]>, todoListId: string): void {
+    const tasks = this.getPendingTasks(todoListId);
+    const previousIndex = event.previousIndex;
+    const currentIndex = event.currentIndex;
+
+    if (previousIndex === currentIndex) {
+      return; // No hay cambio
+    }
+
+    // Crear una copia de las tareas para reordenar
+    const reorderedTasks = [...tasks];
+    moveItemInArray(reorderedTasks, previousIndex, currentIndex);
+
+    // Obtener los IDs en el nuevo orden
+    const taskIds = reorderedTasks.map(task => task.id);
+    
+    // Encontrar el projectId correcto para este todoListId
+    const projectId = this.findProjectIdByTodoListId(todoListId);
+    if (!projectId) {
+      console.error('No se encontró projectId para todoListId:', todoListId);
+      return;
+    }
+
+    // Persistir el cambio en el backend
+    this.updateTasksOrderUseCase.execute(projectId, todoListId, taskIds).subscribe({
+      next: (updatedTasks) => {
+        // Actualizar con las tareas que retorna el backend
+        if (updatedTasks && updatedTasks.length > 0) {
+          const allTasks = this.todoListTasks[todoListId] || [];
+          const completedTasks = allTasks.filter(task => task.completed);
+          this.todoListTasks[todoListId] = [...updatedTasks, ...completedTasks];
+        }
+      },
+      error: (error) => {
+        console.error('Error al actualizar el orden de las tareas:', error);
+        // No hacer cambios locales si falla el backend
+      }
+    });
   }
 
 }

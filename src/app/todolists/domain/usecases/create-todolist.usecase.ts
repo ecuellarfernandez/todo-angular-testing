@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { TodoList } from '../models/todolist.model';
 import { TodoListRepository } from '../repositories/todolist.repository';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CreateTodoListUseCase {
   constructor(private todoListRepository: TodoListRepository) {}
 

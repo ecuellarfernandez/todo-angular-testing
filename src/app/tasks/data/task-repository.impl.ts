@@ -5,7 +5,9 @@ import { TaskRepository } from '../domain/repositories/task.repository';
 import { Task } from '../domain/models/task.model';
 import { environment } from '../../../enviroments/enviroment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TaskRepositoryImpl implements TaskRepository {
   private baseApiUrl = environment.apiUrl;
 
@@ -39,6 +41,12 @@ export class TaskRepositoryImpl implements TaskRepository {
   updateTaskStatus(projectId: string, todoListId: string, taskId: string, completed: boolean): Observable<Task> {
     return this.http.patch<Task>(`${this.baseApiUrl}/projects/${projectId}/todolists/${todoListId}/tasks/${taskId}/status`, {
       completed
+    });
+  }
+
+  updateTasksOrder(projectId: string, todoListId: string, taskIds: string[]): Observable<Task[]> {
+    return this.http.patch<Task[]>(`${this.baseApiUrl}/projects/${projectId}/todolists/${todoListId}/tasks/reorder`, {
+      taskIds
     });
   }
 

@@ -9,7 +9,8 @@ import {
   passwordMatchValidator, 
   strongPasswordValidator, 
   usernameValidator, 
-  noWhitespaceValidator
+  noWhitespaceValidator,
+  minWordsValidator
 } from '../../../core/utils/validators';
 
 @Component({
@@ -49,8 +50,8 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/),
-        noWhitespaceValidator
+        noWhitespaceValidator,
+        minWordsValidator(2)
       ]],
       email: ['', [
         Validators.required,

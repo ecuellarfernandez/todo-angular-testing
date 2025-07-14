@@ -25,9 +25,9 @@ export class ProjectModalComponent {
     this.form = this.fb.group({
       name: ['', [
         Validators.required,
-        Validators.minLength(3),
         Validators.maxLength(100),
-        noWhitespaceValidator
+        noWhitespaceValidator,
+        minWordsValidator(2)
       ]],
       description: ['', [
         Validators.maxLength(500),

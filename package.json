@@ -2,16 +2,18 @@
   "name": "todo-angular-testing",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cy:open": "start-server-and-test start http://localhost:4200 cy:open:raw",
+    "cy:run": "start-server-and-test start http://localhost:4200 cy:run:raw",
+    "cy:open:raw": "cypress open",
+    "cy:run:raw": "cypress run"
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^19.2.19",
     "@angular/common": "^19.2.14",
     "@angular/compiler": "^19.2.14",
     "@angular/core": "^19.2.14",
@@ -30,6 +32,7 @@
     "@angular-devkit/build-angular": "^19.2.15",
     "@angular/cli": "^19.2.15",
     "@angular/compiler-cli": "^19.2.14",
+    "@faker-js/faker": "^9.9.0",
     "@types/jasmine": "~5.1.0",
     "cypress": "^14.5.1",
     "jasmine-core": "~5.6.0",
@@ -38,6 +41,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "start-server-and-test": "^2.0.12",
     "typescript": "~5.7.2"
   }
 }

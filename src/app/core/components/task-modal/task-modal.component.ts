@@ -27,9 +27,9 @@ export class TaskModalComponent {
     this.form = this.fb.group({
       title: ['', [
         Validators.required,
-        Validators.minLength(3),
         Validators.maxLength(100),
-        noWhitespaceValidator
+        noWhitespaceValidator,
+        minWordsValidator(2)
       ]],
       description: ['', [
         Validators.maxLength(500),
@@ -49,7 +49,7 @@ export class TaskModalComponent {
       this.form.patchValue({
         title: this.task.title,
         description: this.task.description,
-        dueDate: this.task.dueDate ? this.formatDateForInput(new Date(this.task.dueDate)) : null,
+        dueDate: this.task.dueDate || null,
         completed: this.task.completed
       });
     } else {
@@ -76,7 +76,7 @@ export class TaskModalComponent {
       title: formValue.title,
       description: formValue.description,
       dueDate: formValue.dueDate,
-      completed: false // Siempre establecer como false para nuevas tareas
+      completed: this.isEditMode ? formValue.completed : false // Mantener el valor en edición, false para nuevas tareas
     };
     
     this.save.emit({

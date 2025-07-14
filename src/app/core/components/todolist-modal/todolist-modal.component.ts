@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TodoList } from '../../../todolists/domain/models/todolist.model';
-import { noWhitespaceValidator } from '../../utils/validators';
+import { noWhitespaceValidator, minWordsValidator } from '../../utils/validators';
 
 @Component({
   selector: 'app-todolist-modal',
@@ -26,14 +26,17 @@ export class TodoListModalComponent {
     this.form = this.fb.group({
       name: ['', [
         Validators.required,
-        Validators.minLength(3),
         Validators.maxLength(100),
-        noWhitespaceValidator
+        noWhitespaceValidator,
+        minWordsValidator(2)
       ]]
     });
   }
   
   ngOnChanges(): void {
+    // Resetear el estado de envío cada vez que cambian las propiedades
+    this.submitting = false;
+    
     if (this.todoList && this.isEditMode) {
       this.form.patchValue({
         name: this.todoList.name
@@ -61,6 +64,7 @@ export class TodoListModalComponent {
   
   onClose(): void {
     this.form.reset();
+    this.submitting = false;
     this.close.emit();
   }
 }

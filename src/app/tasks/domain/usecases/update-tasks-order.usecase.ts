@@ -4,10 +4,10 @@ import { Task } from '../models/task.model';
 import { TaskRepository } from '../repositories/task.repository';
 
 @Injectable({ providedIn: 'root' })
-export class UpdateTaskUseCase {
+export class UpdateTasksOrderUseCase {
   constructor(private taskRepository: TaskRepository) {}
 
-  execute(projectId: string, todoListId: string, taskId: string, title: string, description?: string, dueDate?: string): Observable<Task> {
-    return this.taskRepository.updateTask(projectId, todoListId, taskId, title, description, dueDate);
+  execute(projectId: string, todoListId: string, taskIds: string[]): Observable<Task[]> {
+    return this.taskRepository.updateTasksOrder(projectId, todoListId, taskIds);
   }
 }
