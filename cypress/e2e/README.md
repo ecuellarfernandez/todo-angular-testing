@@ -1,22 +1,95 @@
-## Usuario necesario para el test de login (Cypress)
+# Cypress E2E Test Suite
 
-Para que el test automatizado de **inicio de sesión** funcione correctamente, es necesario que el siguiente usuario ya exista en la base de datos **antes de ejecutar el test**:
+### Estructura de Carpetas
 
-| Campo      | Valor                     |
-|------------|---------------------------|
-| **Email**  | `andres.lopez@gmail.com`  |
-| **Password** | `AndresLopez123!`         |
+```
+cypress/e2e/
+├── auth/                    # Tests de autenticación
+│   ├── login.cy.ts         # Tests de inicio de sesión
+│   └── register.cy.ts      # Tests de registro de usuario
+├── projects/                # Tests de gestión de proyectos
+│   └── project-management.cy.ts
+├── todolists/              # Tests de gestión de todolists
+│   └── todolist-management.cy.ts
+├── tasks/                  # Tests de gestión de tareas
+│   ├── task-crud.cy.ts     # CRUD básico de tareas
+│   └── task-advanced.cy.ts # Tests avanzados (drag & drop, validaciones)
+├── integration/            # Tests de integración
+    └── complete-workflow.cy.ts
 
-### Requisitos:
-- El usuario debe estar previamente registrado en la base de datos.
-- La contraseña debe cumplir con las reglas de seguridad del sistema:
-  - Mínimo **8 caracteres**.
-  - Al menos **una letra mayúscula**.
-  - Al menos **una letra minúscula**.
-  - Al menos **un carácter especial**.
-- El usuario debe tener acceso habilitado para iniciar sesión.
+```
 
-### Motivo:
-Este usuario es utilizado en el test automatizado (`login.cy.ts`) para verificar que el proceso de inicio de sesión funcione correctamente.
+## Características de la Suite
 
-> **Importante:** Si eliminas o modificas este usuario en la base de datos, el test de login fallará.
+### Sistema de Mocks
+- **Backend simulado**: API mocking completo con interceptors
+- **Datos realistas**: Integración con @faker-js/faker
+- **Persistencia**: Almacenamiento local durante la sesión de tests
+
+### Comandos Cypress Personalizados
+- `cy.createProject(name)` - Crear proyecto
+- `cy.createTodoList(name)` - Crear todolist
+- `cy.createTask(title)` - Crear tarea
+- `cy.toggleTaskCompletion(title)` - Completar/descompletar tarea
+- `cy.editTask(oldTitle, newTitle)` - Editar tarea
+- `cy.deleteTask(title)` - Eliminar tarea
+
+### Atributos data-cy Implementados
+Todos los elementos interactivos tienen atributos `data-cy` para tests robustos:
+- `[data-cy=add-project]`
+- `[data-cy=project-title]`
+- `[data-cy=submit-project]`
+- `[data-cy=task-item]`
+
+## Categorías de Tests
+
+### Authentication (`auth/`)
+- Validaciones de formularios
+- Login/logout
+- Registro de usuarios
+- Manejo de errores
+
+### Projects (`projects/`)
+- CRUD completo de proyectos
+- Validaciones de formularios
+- Navegación entre vistas
+
+### TodoLists (`todolists/`)
+- Gestión de listas de tareas
+- Validaciones y constraints
+- Flujos de navegación
+
+### Tasks (`tasks/`)
+- **CRUD básico**: Crear, leer, actualizar, eliminar
+- **Avanzado**: Drag & drop, validaciones complejas, performance
+
+### Integration (`integration/`)
+- Flujos completos usuario
+- Tests end-to-end
+- Pruebas de regresión
+
+## Cómo Ejecutar
+
+### Ejecutar todos los tests
+```bash
+npm run test
+# o
+npx cypress run
+```
+
+### Ejecutar tests por categoría
+```bash
+# Solo tests de autenticación
+npx cypress run --spec "cypress/e2e/auth/**"
+
+# Solo tests de tareas
+npx cypress run --spec "cypress/e2e/tasks/**"
+
+# Test específico
+npx cypress run --spec "cypress/e2e/integration/complete-workflow.cy.ts"
+```
+
+### Modo interactivo
+```bash
+npx cypress open
+```
