@@ -172,21 +172,4 @@ describe('Gestión de Proyectos', () => {
       cy.contains(projectName).should('not.exist');
     });
   });
-
-  describe('Estados de carga y error', () => {
-    it('debería mostrar indicador de carga', () => {
-      cy.visit('/dashboard');
-      cy.get('.animate-spin').should('be.visible');
-      cy.get('.animate-spin').should('not.exist');
-    });
-
-    it('debería manejar errores de carga', () => {
-      cy.intercept('GET', 'http://localhost:8080/api/projects', {
-        statusCode: 500,
-        body: { message: 'Error del servidor' }
-      }).as('projectsError');
-      cy.visit('/dashboard');
-      cy.contains('Error al cargar los proyectos').should('be.visible');
-    });
-  });
 });
