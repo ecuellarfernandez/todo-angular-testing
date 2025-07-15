@@ -26,7 +26,7 @@ export class TaskRepositoryImpl implements TaskRepository {
       title,
       description,
       dueDate,
-      completed: false // Asegurar que las tareas nuevas siempre se creen como no completadas
+      completed: false
     });
   }
 

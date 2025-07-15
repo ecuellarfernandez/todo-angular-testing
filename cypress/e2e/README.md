@@ -16,15 +16,25 @@ cypress/e2e/
 │   └── task-advanced.cy.ts # Tests avanzados (drag & drop, validaciones)
 ├── integration/            # Tests de integración
     └── complete-workflow.cy.ts
-
 ```
 
 ## Características de la Suite
 
-### Sistema de Mocks
-- **Backend simulado**: API mocking completo con interceptors
-- **Datos realistas**: Integración con @faker-js/faker
-- **Persistencia**: Almacenamiento local durante la sesión de tests
+### Sin Mocks: Pruebas 100% contra la API real
+- Todas las pruebas E2E interactúan directamente con el backend real.
+- No se utiliza ningún sistema de mocks ni interceptores para simular respuestas.
+- El estado se prepara y limpia usando la propia API real antes y después de cada test.
+
+### Usuario de Test Global
+- Todas las pruebas utilizan el usuario global:
+  - **Email:** `test@test.com`
+  - **Password:** `password123`
+- Estas credenciales están definidas como variables globales reutilizables en `cypress/support/commands.ts`:
+  ```js
+  export const TEST_USER_EMAIL = 'test@test.com';
+  export const TEST_USER_PASSWORD = 'password123';
+  ```
+- Si necesitas cambiar el usuario de test, modifica estas variables y los tests lo usarán automáticamente.
 
 ### Comandos Cypress Personalizados
 - `cy.createProject(name)` - Crear proyecto
