@@ -1,37 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { API_URL, TEST_USER_EMAIL, TEST_USER_PASSWORD } from '../../support/commands';
 
-function deleteAllProjects() {
-  cy.request({
-    method: 'GET',
-    url: API_URL,
-    headers: { Authorization: `Bearer ${window.localStorage.getItem('jwt')}` },
-    failOnStatusCode: false,
-  }).then((response) => {
-    if (Array.isArray(response.body)) {
-      response.body.forEach((project: any) => {
-        cy.request({
-          method: 'DELETE',
-          url: `${API_URL}/${project.id}`,
-          headers: { Authorization: `Bearer ${window.localStorage.getItem('jwt')}` },
-          failOnStatusCode: false,
-        });
-      });
-    }
-  });
-}
-
 describe('Gestión de Tareas - Funcionalidades Avanzadas', () => {
   beforeEach(() => {
     cy.loginByApi(TEST_USER_EMAIL, TEST_USER_PASSWORD).then(() => {
-      deleteAllProjects();
+      cy.deleteAllProjects();
     });
     cy.visit('/dashboard');
     cy.get('body').should('be.visible');
   });
 
   afterEach(() => {
-    deleteAllProjects();
+    cy.deleteAllProjects();
   });
 
   describe('Drag and Drop de tareas', () => {

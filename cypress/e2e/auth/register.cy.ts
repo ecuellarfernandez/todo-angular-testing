@@ -39,7 +39,7 @@ describe('Autenticación - Registro', () => {
       cy.get('[data-cy=register-confirm-password]').type('Test@1234');
       cy.get('[data-cy=register-name]').type('A');
       cy.get('[data-cy=register-submit]').click();
-      cy.contains('El nombre debe tener al menos 2 caracteres').should('be-visible');
+      cy.contains('El nombre debe tener al menos 2 caracteres').should('be.visible');
       cy.get('[data-cy=register-name]').clear().type('Nombre');
       cy.get('[data-cy=register-submit]').click();
       cy.contains('El nombre debe contener al menos 2 palabras').should('be.visible');

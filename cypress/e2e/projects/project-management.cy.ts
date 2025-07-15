@@ -1,34 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { API_URL, TEST_USER_EMAIL, TEST_USER_PASSWORD } from '../../support/commands';
 
-function deleteAllProjects() {
-  cy.request({
-    method: 'GET',
-    url: API_URL,
-    failOnStatusCode: false,
-  }).then((response) => {
-    if (Array.isArray(response.body)) {
-      response.body.forEach((project: any) => {
-        cy.request({
-          method: 'DELETE',
-          url: `${API_URL}/${project.id}`,
-          failOnStatusCode: false,
-        });
-      });
-    }
-  });
-}
-
 describe('Gestión de Proyectos', () => {
   beforeEach(() => {
-    deleteAllProjects();
-    cy.loginByApi(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+    cy.loginByApi(TEST_USER_EMAIL, TEST_USER_PASSWORD).then(() => {
+      cy.deleteAllProjects();
+    });
     cy.visit('/dashboard');
     cy.get('body').should('be.visible');
   });
 
   afterEach(() => {
-    deleteAllProjects();
+    cy.deleteAllProjects();
   });
 
   describe('Creación de proyectos', () => {
@@ -65,6 +48,7 @@ describe('Gestión de Proyectos', () => {
 
   describe('Visualización de proyectos', () => {
     it('debería mostrar lista vacía cuando no hay proyectos', () => {
+      cy.wait(500); // Espera breve para que la UI se actualice tras la limpieza
       cy.contains('No tienes proyectos creados').should('be.visible');
       cy.contains('Crear primer proyecto').should('be.visible');
     });
