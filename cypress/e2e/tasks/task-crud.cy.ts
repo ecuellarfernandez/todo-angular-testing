@@ -1,27 +1,28 @@
 import { faker } from '@faker-js/faker';
+import { API_URL, TEST_USER_EMAIL, TEST_USER_PASSWORD } from '../../support/commands';
 
 describe('Gestión de Tareas - CRUD', () => {
   beforeEach(() => {
-    cy.setupApiMocks();
-    cy.clearMockData();
-    cy.loginByApi();
+    cy.loginByApi(TEST_USER_EMAIL, TEST_USER_PASSWORD).then(() => {
+      cy.deleteAllProjects();
+    });
     cy.visit('/dashboard');
-    cy.wait('@getProjects');
+    cy.get('body').should('be.visible');
+  });
+
+  afterEach(() => {
+    cy.deleteAllProjects();
   });
 
   describe('Creación de tareas', () => {
     it('debería crear una tarea básica exitosamente', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
-      const taskTitle = faker.word.words(3); // Asegurar al menos 3 palabras
-
-      // Configurar entorno
+      const taskTitle = faker.word.words(3);
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
-
-      // Crear tarea
       cy.createTask(taskTitle);
       cy.verifyTaskExists(taskTitle);
     });
@@ -29,21 +30,15 @@ describe('Gestión de Tareas - CRUD', () => {
     it('debería crear tarea con descripción y fecha', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
-      const taskTitle = faker.word.words(3); // Asegurar al menos 3 palabras
+      const taskTitle = faker.word.words(3);
       const taskDescription = faker.lorem.paragraph();
       const dueDate = '2025-12-31';
-      const expectedDisplayDate = '31/12/2025'; // Formato DD/MM/YYYY
-
-      // Configurar entorno
+      const expectedDisplayDate = '31/12/2025';
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
-
-      // Crear tarea con datos completos
       cy.createTask(taskTitle, taskDescription, dueDate);
-      
-      // Verificar detalles
       cy.verifyTaskExists(taskTitle);
       cy.get('[data-cy=task-item]')
         .contains(taskTitle)
@@ -56,13 +51,10 @@ describe('Gestión de Tareas - CRUD', () => {
     it('debería validar título requerido', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
-
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
-
-      // Intentar crear tarea sin título
       cy.get('[data-cy=add-task]').click();
       cy.get('[data-cy=submit-task]').should('be.disabled');
     });
@@ -70,15 +62,12 @@ describe('Gestión de Tareas - CRUD', () => {
     it('debería cerrar modal al cancelar', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
-
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
-
       cy.get('[data-cy=add-task]').click();
       cy.get('[data-cy=task-title]').should('be.visible');
-      
       cy.get('[data-cy=cancel-task]').click();
       cy.get('[data-cy=task-title]').should('not.exist');
     });
@@ -88,12 +77,10 @@ describe('Gestión de Tareas - CRUD', () => {
     it('debería mostrar mensaje cuando no hay tareas', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
-
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
-
       cy.contains('No hay tareas').should('be.visible');
     });
 
@@ -101,19 +88,13 @@ describe('Gestión de Tareas - CRUD', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
       const tasks = Array.from({ length: 3 }, () => faker.word.words(3));
-
-      // Configurar entorno
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
-
-      // Crear múltiples tareas
       tasks.forEach(taskTitle => {
         cy.createTask(taskTitle);
       });
-
-      // Verificar que todas aparecen
       tasks.forEach(taskTitle => {
         cy.verifyTaskExists(taskTitle);
       });
@@ -123,14 +104,11 @@ describe('Gestión de Tareas - CRUD', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
       const taskTitle = faker.word.words(3);
-
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
       cy.createTask(taskTitle);
-
-      // Verificar estado inicial (no completada)
       cy.get('[data-cy=task-item]')
         .contains(taskTitle)
         .closest('[data-cy=task-item]')
@@ -144,17 +122,12 @@ describe('Gestión de Tareas - CRUD', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
       const taskTitle = faker.word.words(3);
-
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
       cy.createTask(taskTitle);
-
-      // Marcar como completada
       cy.toggleTaskCompletion(taskTitle);
-      
-      // Verificar estado
       cy.get('[data-cy=task-item]')
         .contains(taskTitle)
         .closest('[data-cy=task-item]')
@@ -166,18 +139,13 @@ describe('Gestión de Tareas - CRUD', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
       const taskTitle = faker.word.words(3);
-
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
       cy.createTask(taskTitle);
-
-      // Marcar y desmarcar
       cy.toggleTaskCompletion(taskTitle);
       cy.toggleTaskCompletion(taskTitle);
-      
-      // Verificar que volvió a estar sin completar
       cy.get('[data-cy=task-item]')
         .contains(taskTitle)
         .closest('[data-cy=task-item]')
@@ -189,34 +157,25 @@ describe('Gestión de Tareas - CRUD', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
       const tasks = Array.from({ length: 3 }, () => faker.word.words(3));
-
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
-
-      // Crear tareas
       tasks.forEach(taskTitle => {
         cy.createTask(taskTitle);
       });
-
-      // Marcar algunas como completadas
       cy.toggleTaskCompletion(tasks[0]);
       cy.toggleTaskCompletion(tasks[2]);
-
-      // Verificar estados independientes
       cy.get('[data-cy=task-item]')
         .contains(tasks[0])
         .closest('[data-cy=task-item]')
         .find('[data-cy=task-checkbox]')
         .should('be.checked');
-
       cy.get('[data-cy=task-item]')
         .contains(tasks[1])
         .closest('[data-cy=task-item]')
         .find('[data-cy=task-checkbox]')
         .should('not.be.checked');
-
       cy.get('[data-cy=task-item]')
         .contains(tasks[2])
         .closest('[data-cy=task-item]')
@@ -230,20 +189,16 @@ describe('Gestión de Tareas - CRUD', () => {
       const projectName = faker.company.name();
       const todolistName = faker.word.words(2);
       const taskTitle = faker.word.words(3);
-
       cy.createProject(projectName);
       cy.contains(projectName).click();
       cy.createTodoList(todolistName);
       cy.contains(todolistName).click();
       cy.createTask(taskTitle);
-
-      // Abrir edición
       cy.get('[data-cy=task-item]')
         .contains(taskTitle)
         .closest('[data-cy=task-item]')
         .find('[data-cy=edit-task]')
         .click();
-
       cy.get('input[data-cy=task-title]').should('have.value', taskTitle);
     });
 
