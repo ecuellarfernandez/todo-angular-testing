@@ -28,7 +28,7 @@ Asegúrate de que el backend esté ejecutándose en:
 - **URL:** `http://localhost:8080/api`
 - **Puerto:** 8080
 
-## 🛠Instalación y Configuración
+## Instalación y Configuración
 
 ### 1. Instalar dependencias
 ```bash
