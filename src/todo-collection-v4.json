@@ -1,0 +1,1682 @@
+{
+	"info": {
+		"_postman_id": "1a6ea535-a2e7-41f3-936c-eb17b197cc71",
+		"name": "TODO SpringBoot testing",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" alt=\"\" height=\"1530\" width=\"2162\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31497526"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo username\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.username).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo email\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.email).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"El username coincide con el enviado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.username).to.eql(\"user1\");",
+									"});",
+									"",
+									"pm.test(\"El email coincide con el enviado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.email).to.eql(\"user1@gmail.com\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"user1\",\r\n    \"name\":\"erick\",\r\n    \"email\":\"user1@gmail.com\",\r\n    \"password\":\"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/users/register",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo token\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.token).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El token es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.token).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"El token tiene formato válido\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.token).to.match(/^[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]*$/);",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo user\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.user).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El usuario tiene ID válido\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.user.id).to.exist;",
+									"    pm.expect(responseData.user.id).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"// Guarda el token en una variable de colección",
+									"let response = pm.response.json();",
+									"pm.collectionVariables.set(\"col_authToken\", response.token);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"test@test.com\",\n    \"password\":\"Test1@Test!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/auth/login",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo username\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.username).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo email\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.email).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo name\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"El username es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.username).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"El email tiene formato válido\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);",
+									"});",
+									"",
+									"pm.test(\"No contiene campo password\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.password).to.be.undefined;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/auth/me",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "Crear Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo name\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo description\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"El nombre coincide con el enviado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.eql(\"Proyecto Test\");",
+									"});",
+									"",
+									"pm.test(\"La descripción coincide con la enviada\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.eql(\"Descripción de prueba\");",
+									"});",
+									"",
+									"const data = pm.response.json();",
+									"pm.collectionVariables.set(\"col_projectId\", data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Proyecto Test\",\n    \"description\": \"Descripción de prueba\"\n}"
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/projects",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Project por ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo name\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo description\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID coincide con el solicitado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.eql(pm.collectionVariables.get(\"col_projectId\"));",
+									"});",
+									"",
+									"pm.test(\"El nombre es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"La descripción es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Projects del usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La respuesta es un array\", function () {",
+									"    pm.expect(Array.isArray(pm.response.json())).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"El array contiene al menos un proyecto\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.length).to.be.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"Cada proyecto tiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(project => {",
+									"        pm.expect(project.id).to.exist;",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Cada proyecto tiene campo name\", function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(project => {",
+									"        pm.expect(project.name).to.exist;",
+									"});",
+									"});",
+									"",
+									"pm.test(\"Cada proyecto tiene campo description\", function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(project => {",
+									"        pm.expect(project.description).to.exist;",
+									"});",
+									"});",
+									"",
+									"pm.test(\"Existe el proyecto creado en la lista\", function () {",
+									"    const responseData = pm.response.json();",
+									"    const projectIds = responseData.map(project => project.id);",
+									"    pm.expect(projectIds).to.include(pm.collectionVariables.get(\"col_projectId\"));",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{col_baseUrl}}/projects",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo name\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo description\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID no ha cambiado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.eql(pm.collectionVariables.get(\"col_projectId\"));",
+									"});",
+									"",
+									"pm.test(\"El nombre se actualizó correctamente\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.eql(\"Proyecto Actualizado\");",
+									"});",
+									"",
+									"pm.test(\"La descripción se actualizó correctamente\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.eql(\"Descripción actualizada\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Proyecto Actualizado\",\n    \"description\": \"Descripción actualizada\"\n}"
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"No hay contenido en la respuesta\", function () {",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TodoLists",
+			"item": [
+				{
+					"name": "Crear TodoList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo name\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"El nombre coincide con el enviado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.eql(\"TodoList de ERIQUITO\");",
+									"});",
+									"",
+									"pm.test(\"La TodoList pertenece al proyecto correcto\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.projectId).to.eql(pm.collectionVariables.get(\"col_projectId\"));",
+									"});",
+									"",
+									"const data = pm.response.json();",
+									"pm.collectionVariables.set(\"col_todoListId\", data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"TodoList de ERIQUITO\"\n}"
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener TodoLists del Proyecto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La respuesta es un array\", function () {",
+									"    pm.expect(Array.isArray(pm.response.json())).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"El array contiene al menos una TodoList\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.length).to.be.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"Cada TodoList tiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(todoList => {",
+									"        pm.expect(todoList.id).to.exist;",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Cada TodoList tiene campo name\", function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(todoList => {",
+									"        pm.expect(todoList.name).to.exist;",
+									"});",
+									"});",
+									"",
+									"pm.test(\"Existe la TodoList creada en la lista\", function () {",
+									"    const responseData = pm.response.json();",
+									"    const todoListIds = responseData.map(todoList => todoList.id);",
+									"    pm.expect(todoListIds).to.include(pm.collectionVariables.get(\"col_todoListId\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener TodoList por ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo name\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID coincide con el solicitado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.eql(pm.collectionVariables.get(\"col_todoListId\"));",
+									"});",
+									"",
+									"pm.test(\"El nombre es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"La TodoList pertenece al proyecto correcto\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.projectId).to.eql(pm.collectionVariables.get(\"col_projectId\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists/{{col_todoListId}}",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists",
+								"{{col_todoListId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar TodoList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo name\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID no ha cambiado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.eql(pm.collectionVariables.get(\"col_todoListId\"));",
+									"});",
+									"",
+									"pm.test(\"El nombre se actualizó correctamente\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.name).to.eql(\"TodoList Actualizada\");",
+									"});",
+									"",
+									"pm.test(\"La TodoList sigue perteneciendo al proyecto correcto\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.projectId).to.eql(pm.collectionVariables.get(\"col_projectId\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"TodoList Actualizada\"\n}"
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists/{{col_todoListId}}",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists",
+								"{{col_todoListId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar TodoList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"No hay contenido en la respuesta\", function () {",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists/{{col_todoListId}}",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists",
+								"{{col_todoListId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Crear Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo title\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.title).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo description\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo dueDate\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.dueDate).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo completed\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.completed).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"El título coincide con el enviado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.title).to.eql(\"Tarea de prueba\");",
+									"});",
+									"",
+									"pm.test(\"La descripción coincide con la enviada\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.eql(\"Descripción de la tarea\");",
+									"});",
+									"",
+									"pm.test(\"La fecha de vencimiento coincide con la enviada\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.dueDate).to.eql(\"2024-12-31\");",
+									"});",
+									"",
+									"pm.test(\"La tarea se crea como no completada\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.completed).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"La tarea pertenece a la TodoList correcta\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.todoListId).to.eql(pm.collectionVariables.get(\"col_todoListId\"));",
+									"});",
+									"",
+									"const data = pm.response.json();",
+									"pm.collectionVariables.set(\"col_taskId\", data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Tarea de prueba\",\n    \"description\": \"Descripción de la tarea\",\n    \"dueDate\": \"2024-12-31\"\n}"
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists/{{col_todoListId}}/tasks",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists",
+								"{{col_todoListId}}",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Tasks de TodoList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La respuesta es un array\", function () {",
+									"    pm.expect(Array.isArray(pm.response.json())).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"El array contiene al menos una tarea\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.length).to.be.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"Cada tarea tiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(task => {",
+									"        pm.expect(task.id).to.exist;",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Cada tarea tiene campo title\", function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(task => {",
+									"        pm.expect(task.title).to.exist;",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Cada tarea tiene campo description\", function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(task => {",
+									"        pm.expect(task.description).to.exist;",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Cada tarea tiene campo completed\", function () {",
+									"    const responseData = pm.response.json();",
+									"    responseData.forEach(task => {",
+									"        pm.expect(task.completed).to.exist;",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Existe la tarea creada en la lista\", function () {",
+									"    const responseData = pm.response.json();",
+									"    const taskIds = responseData.map(task => task.id);",
+									"    pm.expect(taskIds).to.include(pm.collectionVariables.get(\"col_taskId\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists/{{col_todoListId}}/tasks",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists",
+								"{{col_todoListId}}",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Task por ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo title\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.title).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo description\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo dueDate\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.dueDate).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo completed\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.completed).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID coincide con el solicitado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.eql(pm.collectionVariables.get(\"col_taskId\"));",
+									"});",
+									"",
+									"pm.test(\"El título es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.title).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"La descripción es una cadena no vacía\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"La fecha de vencimiento tiene formato válido\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.dueDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+									"});",
+									"",
+									"pm.test(\"La tarea pertenece a la TodoList correcta\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.todoListId).to.eql(pm.collectionVariables.get(\"col_todoListId\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists/{{col_todoListId}}/tasks/{{col_taskId}}",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists",
+								"{{col_todoListId}}",
+								"tasks",
+								"{{col_taskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo title\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.title).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo description\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo dueDate\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.dueDate).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID no ha cambiado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.eql(pm.collectionVariables.get(\"col_taskId\"));",
+									"});",
+									"",
+									"pm.test(\"El título se actualizó correctamente\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.title).to.eql(\"Tarea actualizada\");",
+									"});",
+									"",
+									"pm.test(\"La descripción se actualizó correctamente\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.description).to.eql(\"Descripción actualizada\");",
+									"});",
+									"",
+									"pm.test(\"La fecha de vencimiento se actualizó correctamente\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.dueDate).to.eql(\"2025-01-01\");",
+									"});",
+									"",
+									"pm.test(\"La tarea sigue perteneciendo a la TodoList correcta\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.todoListId).to.eql(pm.collectionVariables.get(\"col_todoListId\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Tarea actualizada\",\n    \"description\": \"Descripción actualizada\",\n    \"dueDate\": \"2025-01-01\"\n}"
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists/{{col_todoListId}}/tasks/{{col_taskId}}",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists",
+								"{{col_todoListId}}",
+								"tasks",
+								"{{col_taskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Task Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Content-Type es application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Respuesta contiene campo completed\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.completed).to.exist;",
+									"});",
+									"",
+									"pm.test(\"El ID no ha cambiado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.eql(pm.collectionVariables.get(\"col_taskId\"));",
+									"});",
+									"",
+									"pm.test(\"El estado se actualizó a completado\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.completed).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Los demás campos no se modificaron\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.title).to.eql(\"Tarea actualizada\");",
+									"    pm.expect(responseData.description).to.eql(\"Descripción actualizada\");",
+									"    pm.expect(responseData.dueDate).to.eql(\"2025-01-01\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"completed\": true\n}"
+						},
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists/{{col_todoListId}}/tasks/{{col_taskId}}/status",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists",
+								"{{col_todoListId}}",
+								"tasks",
+								"{{col_taskId}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado es 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1 segundo\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"No hay contenido en la respuesta\", function () {",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{col_authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{col_baseUrl}}/projects/{{col_projectId}}/todolists/{{col_todoListId}}/tasks/{{col_taskId}}",
+							"host": [
+								"{{col_baseUrl}}"
+							],
+							"path": [
+								"projects",
+								"{{col_projectId}}",
+								"todolists",
+								"{{col_todoListId}}",
+								"tasks",
+								"{{col_taskId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Verifica si ya hay un token",
+					"if (!pm.collectionVariables.get(\"col_authToken\") || pm.collectionVariables.get(\"col_authToken\") === \"null\") {",
+					"    console.log(\"No authToken. Procediendo a registrar e iniciar sesión...\");",
+					"",
+					"    // Define usuario de prueba",
+					"    const user = {",
+					"        email: \"testuser_\" + Date.now() + \"@example.com\",",
+					"        password: \"Test1@Test!\",",
+					"        name: \"test testuser_\" + Date.now(),",
+					"        username: \"testusername_\" + Date.now(),",
+					"    };",
+					"",
+					"    // Registrar usuario",
+					"    pm.sendRequest({",
+					"        url: pm.collectionVariables.get(\"col_baseUrl\") + \"/users/register\",",
+					"        method: \"POST\",",
+					"        header: {",
+					"            \"Content-Type\": \"application/json\"",
+					"        },",
+					"        body: {",
+					"            mode: \"raw\",",
+					"            raw: JSON.stringify(user)",
+					"        }",
+					"    }, function (err, res) {",
+					"        if (err || res.code !== 200) {",
+					"            console.error(\"Error registrando usuario:\", err || res.status);",
+					"            return;",
+					"        }",
+					"",
+					"        // Iniciar sesión",
+					"        pm.sendRequest({",
+					"            url: pm.collectionVariables.get(\"col_baseUrl\") + \"/auth/login\",",
+					"            method: \"POST\",",
+					"            header: {",
+					"                \"Content-Type\": \"application/json\"",
+					"            },",
+					"            body: {",
+					"                mode: \"raw\",",
+					"                raw: JSON.stringify(user)",
+					"            }",
+					"        }, function (err2, res2) {",
+					"            if (err2 || res2.code !== 200) {",
+					"                console.error(\"Error iniciando sesión:\", err2 || res2.status);",
+					"                return;",
+					"            }",
+					"",
+					"            const json = res2.json();",
+					"            const token = json.token;",
+					"",
+					"            if (token) {",
+					"                console.log(\"Token guardado en variable de colección:\", token);",
+					"                pm.collectionVariables.set(\"col_authToken\", token);",
+					"            } else {",
+					"                console.error(\"No se encontró token en la respuesta.\");",
+					"            }",
+					"        });",
+					"    });",
+					"} else {",
+					"    console.log(\"Token ya presente:\", pm.collectionVariables.get(\"col_authToken\"));",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "col_baseUrl",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "col_authToken",
+			"value": "null",
+			"type": "string"
+		},
+		{
+			"key": "col_projectId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "col_todoListId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "col_taskId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

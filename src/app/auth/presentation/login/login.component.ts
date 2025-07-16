@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit {
       const password = this.form.get('password')?.value!;
       this.loginUseCase.execute(email, password).subscribe({
         next: (user) => {
-          console.log('Usuario autenticado:', user);
           localStorage.setItem('jwt', user.token);
           this.router.navigate(['/dashboard']);
         },

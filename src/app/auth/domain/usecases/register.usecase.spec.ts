@@ -20,8 +20,10 @@ describe('RegisterUseCase', () => {
     authRepositorySpy.register.and.returnValue(of(userMock));
 
     useCase.execute(username, name, email, password).subscribe(user => {
+      //@ts-ignore
       expect(user).toEqual(userMock);
     });
+    //@ts-ignore
     expect(authRepositorySpy.register).toHaveBeenCalledWith(username, name, email, password);
   });
 }); 
