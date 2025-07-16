@@ -37,17 +37,14 @@ export class ProjectModalComponent {
   }
   
   ngOnChanges(): void {
-    // Resetear el estado de envío cada vez que cambian las propiedades
     this.submitting = false;
     
     if (this.project && this.isEditMode) {
-      // Modo edición: cargar datos del proyecto existente
       this.form.patchValue({
         name: this.project.name,
         description: this.project.description
       });
     } else {
-      // Modo creación: resetear completamente el formulario
       this.form.reset({
         name: '',
         description: ''
@@ -74,23 +71,18 @@ export class ProjectModalComponent {
       project: projectData
     });
     
-    // Resetear el estado de envío después de emitir el evento
     setTimeout(() => {
       this.submitting = false;
     }, 0);
   }
   
   onClose(): void {
-    // Resetear completamente el formulario
     this.form.reset({
       name: '',
       description: ''
     });
     
-    // Resetear el estado de envío
     this.submitting = false;
-    
-    // Emitir evento de cierre
     this.close.emit();
   }
 }

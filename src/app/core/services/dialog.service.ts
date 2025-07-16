@@ -10,12 +10,12 @@ export class DialogService {
   private dialogComponentRef: ComponentRef<ConfirmationDialogComponent> | null = null;
 
   /**
-   * Muestra un diálogo de confirmación
-   * @param titleOrOptions Título del diálogo o un objeto con las opciones
-   * @param message Mensaje del diálogo (opcional si se pasa un objeto de opciones)
-   * @param confirmButtonText Texto del botón de confirmación (opcional si se pasa un objeto de opciones)
-   * @param cancelButtonText Texto del botón de cancelación (opcional)
-   * @returns Promesa que se resuelve con true si el usuario confirma, false si cancela
+   * Abre un diálogo de confirmación
+   * @param titleOrOptions Título o objeto con opciones completas
+   * @param message Mensaje del diálogo
+   * @param confirmButtonText Texto del botón confirmar
+   * @param cancelButtonText Texto del botón cancelar
+   * @returns Promise<boolean> - true si confirma, false si cancela
    */
   confirm(
     titleOrOptions: string | {
@@ -28,21 +28,19 @@ export class DialogService {
     confirmButtonText?: string,
     cancelButtonText?: string
   ): Promise<boolean> {
-    // Determinar los valores a usar basados en el tipo de parámetros recibidos
+    // Extraer valores según el tipo de parámetros
     let title: string;
     let msg: string;
     let confirmText: string;
     let cancelText: string | undefined;
     
     if (typeof titleOrOptions === 'object') {
-      // Caso: se pasó un objeto de opciones
       const options = titleOrOptions;
       title = options.title || 'Confirmar';
       msg = options.message || '¿Está seguro de que desea realizar esta acción?';
       confirmText = options.confirmButtonText || 'Confirmar';
       cancelText = options.cancelButtonText || 'Cancelar';
     } else {
-      // Caso: se pasaron parámetros individuales
       title = titleOrOptions;
       msg = message || '¿Está seguro de que desea realizar esta acción?';
       confirmText = confirmButtonText || 'Confirmar';
@@ -50,15 +48,12 @@ export class DialogService {
     }
     
     return new Promise<boolean>((resolve) => {
-      // Si ya hay un diálogo abierto, lo cerramos
       this.closeDialog();
 
-      // Creamos el componente de diálogo
       this.dialogComponentRef = createComponent(ConfirmationDialogComponent, {
         environmentInjector: this.environmentInjector
       });
 
-      // Configuramos las propiedades del diálogo
       const instance = this.dialogComponentRef.instance;
       instance.title = title;
       instance.message = msg;
@@ -66,7 +61,6 @@ export class DialogService {
       instance.cancelButtonText = cancelText;
       instance.isOpen = true;
 
-      // Manejamos los eventos
       instance.confirm.subscribe(() => {
         this.closeDialog();
         resolve(true);
@@ -77,7 +71,6 @@ export class DialogService {
         resolve(false);
       });
 
-      // Añadimos el componente al DOM
       document.body.appendChild(this.dialogComponentRef.location.nativeElement);
       this.appRef.attachView(this.dialogComponentRef.hostView);
     });
