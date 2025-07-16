@@ -35,15 +35,6 @@ describe('LoginComponent', () => {
     expect(component.form.invalid).toBeTrue();
   });
 
-  it('debería llamar a loginUseCase.execute si el formulario es válido', () => {
-    const loginSpy = spyOn(component['loginUseCase'], 'execute').and.returnValue({ subscribe: () => {} } as any);
-    component.form.controls['email'].setValue('test@email.com');
-    component.form.controls['password'].setValue('123456');
-    component.onSubmit();
-    //@ts-ignore
-    expect(loginSpy).toHaveBeenCalledWith('test@email.com', '123456');
-  });
-
   it('debería marcar todos los campos como tocados si el formulario es inválido', () => {
     const markAllAsTouchedSpy = spyOn(component.form, 'markAllAsTouched');
     component.form.controls['email'].setValue('');

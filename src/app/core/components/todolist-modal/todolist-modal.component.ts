@@ -34,7 +34,6 @@ export class TodoListModalComponent {
   }
   
   ngOnChanges(): void {
-    // Resetear el estado de envío cada vez que cambian las propiedades
     this.submitting = false;
     
     if (this.todoList && this.isEditMode) {

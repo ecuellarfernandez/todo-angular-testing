@@ -172,7 +172,6 @@ export class DashboardComponent implements OnInit {
           if (a.position !== undefined && b.position !== undefined) {
             return a.position - b.position;
           }
-          // Fallback: ordenar por fecha de creación o mantener orden original
           return 0;
         });
         this.todoListTasks[todoListId] = sortedTasks;
@@ -186,7 +185,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Métodos para manejar acordeones
+
   toggleProject(projectId: string): void {
     const index = this.expandedProjects.indexOf(projectId);
     if (index === -1) {
@@ -231,13 +230,11 @@ export class DashboardComponent implements OnInit {
     
     this.updateTaskStatusUseCase.execute(projectId, todoListId, task.id, updatedTask.completed).subscribe({
       next: () => {
-        // Actualizar la tarea en la lista local
         const taskIndex = this.todoListTasks[todoListId].findIndex(t => t.id === task.id);
         if (taskIndex !== -1) {
           this.todoListTasks[todoListId][taskIndex].completed = updatedTask.completed;
         }
         
-        // Actualizar en tareas recientes si existe
         const recentTaskIndex = this.recentTasks.findIndex(t => t.id === task.id);
         if (recentTaskIndex !== -1) {
           this.recentTasks[recentTaskIndex].completed = updatedTask.completed;
@@ -245,7 +242,6 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error updating task status', err);
-        // Revertir cambio en UI
         task.completed = !task.completed;
       }
     });
@@ -261,7 +257,6 @@ export class DashboardComponent implements OnInit {
     event.stopPropagation();
     this.projectEditMode = true;
     
-    // Buscar el proyecto
     const project = this.projects.find(p => p.id === projectId);
     if (project) {
       this.selectedProject = project;
@@ -284,10 +279,8 @@ export class DashboardComponent implements OnInit {
   
   onProjectSave(data: {projectId?: string, project: Partial<Project>}): void {
     if (this.projectEditMode && data.projectId) {
-      // Actualizar proyecto existente
       this.updateProjectUseCase.execute(data.projectId, data.project.name || '', data.project.description).subscribe({
         next: (updatedProject) => {
-          // Actualizar el proyecto en el array local
           const index = this.projects.findIndex(p => p.id === data.projectId);
           if (index !== -1) {
             this.projects[index] = updatedProject;
@@ -306,10 +299,8 @@ export class DashboardComponent implements OnInit {
         }
       });
     } else {
-      // Crear nuevo proyecto
       this.createProjectUseCase.execute(data.project.name || '', data.project.description).subscribe({
         next: (newProject) => {
-          // Añadir el nuevo proyecto al array local
           this.projects.push(newProject);
           this.projectModalOpen = false;
           this.selectedProject = null;
@@ -344,7 +335,6 @@ export class DashboardComponent implements OnInit {
             delete this.todoListErrors[projectId];
             delete this.expandedTodoLists[projectId];
             
-            // Eliminar tareas relacionadas con este proyecto de las tareas recientes
             this.recentTasks = this.recentTasks.filter(t => t.projectId !== projectId);
           },
           error: (err) => {
@@ -373,7 +363,6 @@ export class DashboardComponent implements OnInit {
     this.selectedProjectId = projectId;
     this.todoListEditMode = true;
     
-    // Buscar la lista en el proyecto
     const todoList = this.projectTodoLists[projectId]?.find(list => list.id === todoListId);
     if (todoList) {
       this.selectedTodoList = todoList;
@@ -396,10 +385,8 @@ export class DashboardComponent implements OnInit {
   
   onTodoListSave(data: {projectId: string, todoListId?: string, name: string}): void {
     if (this.todoListEditMode && data.todoListId) {
-      // Actualizar lista existente
       this.updateTodoListUseCase.execute(data.projectId, data.todoListId, data.name).subscribe({
         next: (updatedTodoList) => {
-          // Actualizar la lista en el array local
           const index = this.projectTodoLists[data.projectId].findIndex(list => list.id === data.todoListId);
           if (index !== -1) {
             this.projectTodoLists[data.projectId][index] = updatedTodoList;
@@ -418,10 +405,8 @@ export class DashboardComponent implements OnInit {
         }
       });
     } else {
-      // Crear nueva lista
       this.createTodoListUseCase.execute(data.projectId, data.name).subscribe({
         next: (newTodoList) => {
-          // Añadir la nueva lista al array local
           if (!this.projectTodoLists[data.projectId]) {
             this.projectTodoLists[data.projectId] = [];
           }
@@ -453,17 +438,14 @@ export class DashboardComponent implements OnInit {
       if (confirmed) {
         this.deleteTodoListUseCase.execute(projectId, todoListId).subscribe({
           next: () => {
-            // Eliminar la lista del proyecto
             if (this.projectTodoLists[projectId]) {
               this.projectTodoLists[projectId] = this.projectTodoLists[projectId].filter(list => list.id !== todoListId);
             }
             
-            // Eliminar tareas de esta lista
             delete this.todoListTasks[todoListId];
             delete this.loadingTasks[todoListId];
             delete this.taskErrors[todoListId];
             
-            // Eliminar de expandidos
             if (this.expandedTodoLists[projectId]) {
               const index = this.expandedTodoLists[projectId].indexOf(todoListId);
               if (index !== -1) {
@@ -471,7 +453,6 @@ export class DashboardComponent implements OnInit {
               }
             }
             
-            // Eliminar tareas relacionadas de las tareas recientes
             this.recentTasks = this.recentTasks.filter(t => t.todoListId !== todoListId);
           },
           error: (err) => {
@@ -502,7 +483,6 @@ export class DashboardComponent implements OnInit {
     this.selectedTodoListId = todoListId;
     this.taskEditMode = true;
     
-    // Buscar la tarea en la lista
     const task = this.todoListTasks[todoListId]?.find(task => task.id === taskId);
     if (task) {
       this.selectedTask = task;
@@ -518,7 +498,6 @@ export class DashboardComponent implements OnInit {
   }
   
   onTaskModalClose(): void {
-    // Cerrar el modal y resetear completamente su estado
     this.taskModalOpen = false;
     this.selectedTask = null;
     this.taskEditMode = false;
@@ -528,16 +507,13 @@ export class DashboardComponent implements OnInit {
   
   onTaskSave(data: {projectId: string, todoListId: string, taskId?: string, task: Partial<Task>}): void {
     if (this.taskEditMode && data.taskId) {
-      // Actualizar tarea existente
       this.updateTaskUseCase.execute(data.projectId, data.todoListId, data.taskId, data.task.title || '', data.task.description, data.task.dueDate).subscribe({
         next: (updatedTask) => {
-          // Actualizar la tarea en el array local
           const index = this.todoListTasks[data.todoListId].findIndex(task => task.id === data.taskId);
           if (index !== -1) {
             this.todoListTasks[data.todoListId][index] = updatedTask;
           }
           
-          // Actualizar en tareas recientes si existe
           const recentIndex = this.recentTasks.findIndex(task => task.id === data.taskId);
           if (recentIndex !== -1) {
             this.recentTasks[recentIndex] = updatedTask;
@@ -557,22 +533,18 @@ export class DashboardComponent implements OnInit {
         }
       });
     } else {
-      // Crear nueva tarea
       this.createTaskUseCase.execute(data.projectId, data.todoListId, data.task.title || '', data.task.description, data.task.dueDate).subscribe({
         next: (newTask) => {
-          // Asegurar que la tarea recién creada esté marcada como no completada
           newTask.completed = false;
           
-          // Añadir la nueva tarea al array local
           if (!this.todoListTasks[data.todoListId]) {
             this.todoListTasks[data.todoListId] = [];
           }
           this.todoListTasks[data.todoListId].push(newTask);
           
-          // Añadir a tareas recientes
           this.recentTasks.unshift(newTask);
           if (this.recentTasks.length > 5) {
-            this.recentTasks.pop(); // Mantener solo las 5 más recientes
+            this.recentTasks.pop();
           }
           
           this.taskModalOpen = false;
@@ -602,12 +574,10 @@ export class DashboardComponent implements OnInit {
       if (confirmed) {
         this.deleteTaskUseCase.execute(projectId, todoListId, taskId).subscribe({
           next: () => {
-            // Eliminar la tarea de la lista
             if (this.todoListTasks[todoListId]) {
               this.todoListTasks[todoListId] = this.todoListTasks[todoListId].filter(task => task.id !== taskId);
             }
             
-            // Eliminar de tareas recientes
             this.recentTasks = this.recentTasks.filter(t => t.id !== taskId);
           },
           error: (err) => {
@@ -624,13 +594,11 @@ export class DashboardComponent implements OnInit {
   }
 
   navigateToProject(projectId: string, todoListId: string): void {
-    // Expandir el proyecto
     if (!this.expandedProjects.includes(projectId)) {
       this.expandedProjects.push(projectId);
       this.loadTodoLists(projectId);
     }
     
-    // Esperar a que se carguen las listas y luego expandir la lista específica
     setTimeout(() => {
       if (!this.expandedTodoLists[projectId]) {
         this.expandedTodoLists[projectId] = [];
@@ -640,7 +608,7 @@ export class DashboardComponent implements OnInit {
         this.expandedTodoLists[projectId].push(todoListId);
         this.loadTasks(projectId, todoListId);
       }
-    }, 300); // Pequeño retraso para asegurar que las listas se hayan cargado
+    }, 300);
   }
 
   navigateToTaskDetail(projectId: string, todoListId: string, taskId: string): void {
@@ -652,7 +620,6 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  // Método auxiliar para encontrar el projectId de un todoListId
   private findProjectIdByTodoListId(todoListId: string): string | null {
     for (const projectId in this.projectTodoLists) {
       const todoLists = this.projectTodoLists[projectId];
@@ -663,34 +630,28 @@ export class DashboardComponent implements OnInit {
     return null;
   }
 
-  // Método para manejar drag and drop de tareas
   onTaskDrop(event: CdkDragDrop<Task[]>, todoListId: string): void {
     const tasks = this.getPendingTasks(todoListId);
     const previousIndex = event.previousIndex;
     const currentIndex = event.currentIndex;
 
     if (previousIndex === currentIndex) {
-      return; // No hay cambio
+      return;
     }
 
-    // Crear una copia de las tareas para reordenar
     const reorderedTasks = [...tasks];
     moveItemInArray(reorderedTasks, previousIndex, currentIndex);
 
-    // Obtener los IDs en el nuevo orden
     const taskIds = reorderedTasks.map(task => task.id);
     
-    // Encontrar el projectId correcto para este todoListId
     const projectId = this.findProjectIdByTodoListId(todoListId);
     if (!projectId) {
       console.error('No se encontró projectId para todoListId:', todoListId);
       return;
     }
 
-    // Persistir el cambio en el backend
     this.updateTasksOrderUseCase.execute(projectId, todoListId, taskIds).subscribe({
       next: (updatedTasks) => {
-        // Actualizar con las tareas que retorna el backend
         if (updatedTasks && updatedTasks.length > 0) {
           const allTasks = this.todoListTasks[todoListId] || [];
           const completedTasks = allTasks.filter(task => task.completed);
@@ -699,7 +660,6 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al actualizar el orden de las tareas:', error);
-        // No hacer cambios locales si falla el backend
       }
     });
   }
