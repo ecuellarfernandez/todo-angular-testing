@@ -28,11 +28,11 @@ cypress/e2e/
 ### Usuario de Test Global
 - Todas las pruebas utilizan el usuario global:
   - **Email:** `test@test.com`
-  - **Password:** `password123`
+  - **Password:** `Test1@Test!`
 - Estas credenciales están definidas como variables globales reutilizables en `cypress/support/commands.ts`:
   ```js
   export const TEST_USER_EMAIL = 'test@test.com';
-  export const TEST_USER_PASSWORD = 'password123';
+  export const TEST_USER_PASSWORD = 'Test1@Test!';
   ```
 - Si necesitas cambiar el usuario de test, modifica estas variables y los tests lo usarán automáticamente.
 
