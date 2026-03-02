@@ -1,45 +1,54 @@
-# TodoAngularTesting
+# Todo Angular Testing
 
-Este proyecto es una aplicación de gestión de tareas (Todo) desarrollada con Angular que incluye un sistema completo de autenticación, gestión de proyectos, listas de tareas y tareas individuales. El proyecto está diseñado para demostrar las mejores prácticas de testing con Cypress E2E y pruebas unitarias.
+This project is a comprehensive Task Management (Todo) application developed with Angular 19. It includes a complete authentication system, project management, task lists, and individual task handling. The project is specifically designed to demonstrate best practices in end-to-end (E2E) testing with Cypress and unit testing with Jasmine/Karma.
 
-## Características Principales
+## Key Features
 
-- **Autenticación completa**: Registro e inicio de sesión de usuarios
-- **Gestión de proyectos**: Crear, editar y eliminar proyectos
-- **Listas de tareas**: Organizar tareas en listas dentro de proyectos
-- **Gestión de tareas**: CRUD completo con drag & drop, validaciones y estados
-- **Testing completo**: Pruebas E2E con Cypress y pruebas unitarias
-- **Arquitectura limpia**: Implementación de Clean Architecture con separación de capas
+- **Complete Authentication**: User registration and secure login flows.
+- **Project Management**: Create, edit, and delete projects.
+- **Task Lists**: Organize tasks into lists within specific projects.
+- **Task Management**: Full CRUD operations with drag-and-drop support, validations, and status tracking.
+- **Comprehensive Testing**: Full suite of E2E tests with Cypress and unit tests ensuring application stability.
+- **Clean Architecture**: Strict implementation of Clean Architecture principles with clear separation of Data, Domain, and Presentation layers.
 
-## Prerrequisitos
+## Tech Stack
 
-### Usuario de Prueba Requerido
+- **Framework**: Angular 19
+- **Styling**: Tailwind CSS
+- **E2E Testing**: Cypress
+- **Unit Testing**: Jasmine & Karma
+- **Backend Integration**: Designed to consume a Spring Boot REST API
+- **API Testing**: Postman Collection included for backend validation
 
-**IMPORTANTE**: Para que las pruebas funcionen correctamente, debes tener registrado el siguiente usuario en la base de datos:
+## Prerequisites
 
-- **Email:** `test@test.com`
-- **Password:** `Test1@Test!`
+### Required Test User
 
-Este usuario es utilizado por todas las pruebas E2E de Cypress. Si no existe en la base de datos, las pruebas fallarán.
+IMPORTANT: For the Cypress E2E tests to run correctly against the real backend, the following user must be registered in the database:
 
-### Configuración del Backend
+- **Email:** test@test.com
+- **Password:** Test1@Test!
 
-Asegúrate de que el backend esté ejecutándose en:
-- **URL:** `http://localhost:8080/api`
-- **Puerto:** 8080
+This user is utilized by all automated tests. If it does not exist in the database, the authentication and workflow tests will fail.
 
-## Instalación y Configuración
+### Backend Configuration
 
-### 1. Instalar dependencias
+Ensure that the Spring Boot backend is running locally at:
+- **URL:** http://localhost:8080/api
+- **Port:** 8080
+
+## Installation and Setup
+
+### 1. Install dependencies
 ```bash
 npm install
 ```
 
-### 2. Configurar el backend
-Asegúrate de que tu backend Spring Boot esté ejecutándose en el puerto 8080.
+### 2. Configure the backend
+Start your Spring Boot backend on port 8080 to enable full end-to-end integration.
 
-### 3. Crear usuario de prueba
-Registra el usuario de prueba en tu base de datos:
+### 3. Create the test user
+Register the test user in your database using the following JSON payload:
 ```json
 {
   "username": "testuser",
@@ -49,149 +58,95 @@ Registra el usuario de prueba en tu base de datos:
 }
 ```
 
-## Testing
+## Testing Strategy
 
-### Pruebas E2E con Cypress
+### E2E Testing with Cypress
 
-El proyecto incluye una suite completa de pruebas E2E que cubre todos los flujos de usuario:
+The project includes a comprehensive E2E test suite covering all user workflows without using mocks. The tests interact directly with the real backend and automatically clean up generated data.
 
-#### Estructura de Pruebas
-```
+#### Test Structure
+```text
 cypress/e2e/
-├── auth/                    # Tests de autenticación
-│   ├── login.cy.ts         # Tests de inicio de sesión
-│   └── register.cy.ts      # Tests de registro de usuario
-├── projects/                # Tests de gestión de proyectos
-│   └── project-management.cy.ts
-├── todolists/              # Tests de gestión de todolists
-│   └── todolist-management.cy.ts
-├── tasks/                  # Tests de gestión de tareas
-│   ├── task-crud.cy.ts     # CRUD básico de tareas
-│   └── task-advanced.cy.ts # Tests avanzados (drag & drop, validaciones)
-└── integration/            # Tests de integración
-    └── complete-workflow.cy.ts
+├── auth/                    # Authentication workflows
+├── projects/                # Project management workflows
+├── todolists/               # Task list management
+├── tasks/                   # Task CRUD and advanced interactions
+└── integration/             # Complete end-to-end user journeys
 ```
 
-#### Ejecutar pruebas E2E
+#### Running E2E Tests
 ```bash
-# Ejecutar todas las pruebas
-npm run e2e
+# Run tests headlessly
+npm run cy:run
 
-# Ejecutar en modo interactivo
-npx cypress open
-
-# Ejecutar pruebas específicas
-npx cypress run --spec "cypress/e2e/auth/**"
-npx cypress run --spec "cypress/e2e/tasks/**"
+# Open Cypress interactive UI
+npm run cy:open
 ```
 
-### Pruebas Unitarias
+### Unit Testing
+
+Unit tests are implemented using Jasmine and Karma to ensure component and service reliability.
+
 ```bash
-# Ejecutar pruebas unitarias
-ng test
+# Run unit tests
+npm run test
 
-# Ejecutar con coverage
-ng test --code-coverage
+# Run tests with coverage report
+npm run coverage
 ```
 
-## Colección de Postman
+## API and Postman Collection
 
-### Ubicación
-La colección de Postman se encuentra en:
-```
-src/todo-collection-v4.json
-```
+A complete Postman collection is included to test the Spring Boot API endpoints.
 
-### Importación
-1. Abre Postman
-2. Haz clic en "Import"
-3. Selecciona el archivo `src/todo-collection-v4.json`
-4. La colección se importará con todas las variables y tests configurados
+### Location
+The collection file is located at: `src/todo-collection-v4.json`
 
-### Endpoints Incluidos
+### Key Endpoints Covered
+- **Authentication**: Login, Registration, Current User
+- **Projects**: Full CRUD operations
+- **Task Lists**: Nested CRUD operations by project
+- **Tasks**: Creation, updates, status toggling, and reordering
 
-#### Autenticación
-- **POST** `/auth/login` - Inicio de sesión
-- **POST** `/users/register` - Registro de usuario
-- **GET** `/auth/me` - Obtener usuario actual
+The collection includes automated tests for HTTP status codes, response times, data validation, and automated token injection for authorized requests via collection variables (`col_baseUrl` and `col_authToken`).
 
-#### Proyectos
-- **GET** `/projects` - Listar proyectos
-- **POST** `/projects` - Crear proyecto
-- **GET** `/projects/{id}` - Obtener proyecto por ID
-- **PUT** `/projects/{id}` - Actualizar proyecto
-- **DELETE** `/projects/{id}` - Eliminar proyecto
+## Project Architecture
 
-#### Listas de Tareas
-- **GET** `/projects/{projectId}/todolists` - Listar todolists
-- **POST** `/projects/{projectId}/todolists` - Crear todolist
-- **GET** `/todolists/{id}` - Obtener todolist por ID
-- **PUT** `/todolists/{id}` - Actualizar todolist
-- **DELETE** `/todolists/{id}` - Eliminar todolist
+The frontend application strictly follows Clean Architecture and Domain-Driven Design principles.
 
-#### Tareas
-- **GET** `/todolists/{todolistId}/tasks` - Listar tareas
-- **POST** `/todolists/{todolistId}/tasks` - Crear tarea
-- **GET** `/tasks/{id}` - Obtener tarea por ID
-- **PUT** `/tasks/{id}` - Actualizar tarea
-- **DELETE** `/tasks/{id}` - Eliminar tarea
-- **PUT** `/tasks/{id}/status` - Cambiar estado de tarea
-- **PUT** `/tasks/reorder` - Reordenar tareas
-
-### Variables de Colección
-- `col_baseUrl`: URL base del API (http://localhost:8080/api)
-- `col_authToken`: Token de autenticación (se establece automáticamente al hacer login)
-
-### Tests Automatizados
-Cada endpoint incluye tests automatizados que verifican:
-- Códigos de estado HTTP
-- Tiempos de respuesta
-- Estructura de respuesta JSON
-- Validaciones de datos
-- Autenticación y autorización
-
-## Arquitectura del Proyecto
-
-### Estructura de Carpetas
-```
+### Directory Structure
+```text
 src/app/
-├── auth/                    # Módulo de autenticación
-│   ├── data/               # Implementaciones de repositorios
-│   ├── domain/             # Modelos y casos de uso
-│   └── presentation/       # Componentes de UI
-├── core/                   # Componentes y servicios compartidos
-│   ├── components/         # Componentes reutilizables
-│   ├── guards/            # Guards de navegación
-│   ├── interceptors/      # Interceptores HTTP
-│   └── services/          # Servicios compartidos
-├── projects/              # Módulo de proyectos
-├── tasks/                 # Módulo de tareas
-└── todolists/             # Módulo de listas de tareas
+├── auth/                    # Authentication feature module
+│   ├── data/                # Repository implementations and API services
+│   ├── domain/              # Models, Entities, and Use Cases
+│   └── presentation/        # UI Components and state management
+├── core/                    # Shared core functionality
+│   ├── components/          # Reusable UI components
+│   ├── guards/              # Route protection and authorization
+│   ├── interceptors/        # HTTP interceptors (e.g., JWT injection)
+│   └── services/            # Global singleton services
+├── projects/                # Projects feature module
+├── tasks/                   # Tasks feature module
+└── todolists/               # Task Lists feature module
 ```
 
-### Patrones Implementados
-- **Clean Architecture**: Separación clara entre capas
-- **Repository Pattern**: Abstracción de acceso a datos
-- **Use Case Pattern**: Lógica de negocio encapsulada
-- **Dependency Injection**: Inyección de dependencias
-- **Observer Pattern**: Comunicación entre componentes
+### Implemented Patterns
+- **Clean Architecture**: Clear separation of concerns isolating business logic from UI frameworks.
+- **Repository Pattern**: Abstraction of HTTP data access.
+- **Use Case Pattern**: Encapsulation of specific business operations.
+- **Dependency Injection**: Utilizing Angular's DI for testability and loose coupling.
+- **Observer Pattern**: Heavy usage of RxJS for reactive programming and state communication.
 
-## Desarrollo
+## Development
 
-### Servidor de desarrollo
+Run the development server:
 ```bash
-ng serve
+npm start
 ```
-Navega a `http://localhost:4200/`. La aplicación se recargará automáticamente cuando modifiques archivos.
+Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-### Construcción para producción
+To build the project for production:
 ```bash
-ng build
+npm run build
 ```
-
-## Notas Importantes
-
-- **Sin Mocks**: Las pruebas E2E interactúan directamente con el backend real
-- **Usuario Global**: Todas las pruebas usan el mismo usuario de test para consistencia
-- **Limpieza Automática**: Los tests limpian automáticamente los datos creados
-- **Responsive Testing**: Incluye pruebas para diferentes tamaños de pantalla
